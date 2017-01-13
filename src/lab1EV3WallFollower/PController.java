@@ -5,6 +5,8 @@ public class PController implements UltrasonicController {
 	
 	private final int bandCenter, bandwidth;
 	private final int motorStraight = 200, FILTER_OUT = 20;
+	private final int motorTurnFast = 300;
+	private final int motorTurnSlow = 100;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private int distance;
 	private int filterControl;
@@ -44,6 +46,24 @@ public class PController implements UltrasonicController {
 			// distance alone.
 			filterControl = 0;
 			this.distance = distance;
+			if (distance > (bandCenter + bandwidth)){
+				leftMotor.setSpeed(motorTurnSlow);					// Set new speed
+				rightMotor.setSpeed(motorTurnFast);
+				leftMotor.forward();
+				rightMotor.forward();
+			} else if (distance < (bandCenter - bandwidth)){
+				leftMotor.setSpeed(motorTurnFast);					// Set new speed
+				rightMotor.setSpeed(motorTurnSlow);
+				leftMotor.forward();
+				rightMotor.forward();
+			} else {
+				//Continue forward at normal speed if within bandwidth of the band center
+				leftMotor.setSpeed(motorStraight);					// Set new speed
+				rightMotor.setSpeed(motorStraight);
+				leftMotor.forward();
+				rightMotor.forward();
+			}
+			
 		}
 
 		// TODO: process a movement based on the us distance passed in (P style)

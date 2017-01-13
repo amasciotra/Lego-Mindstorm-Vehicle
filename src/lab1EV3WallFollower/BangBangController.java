@@ -26,6 +26,23 @@ public class BangBangController implements UltrasonicController{
 	public void processUSData(int distance) {
 		this.distance = distance;
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
+		if (distance > (bandCenter + bandwidth)){
+			leftMotor.setSpeed(motorLow);					// Set new speed
+			rightMotor.setSpeed(motorHigh);
+			leftMotor.forward();
+			rightMotor.forward();
+		} else if (distance < (bandCenter - bandwidth)){
+			leftMotor.setSpeed(motorHigh);					// Set new speed
+			rightMotor.setSpeed(motorLow);
+			leftMotor.forward();
+			rightMotor.forward();
+		} else {
+			//Continue forward at normal speed if within bandwidth of the band center
+			leftMotor.setSpeed(motorHigh);					// Set new speed
+			rightMotor.setSpeed(motorHigh);
+			leftMotor.forward();
+			rightMotor.forward();
+		}
 	}
 
 	@Override
