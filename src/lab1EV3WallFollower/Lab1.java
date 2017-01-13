@@ -25,7 +25,7 @@ public class Lab1 {
 //
 // Ultrasonic sensor connected to input port S1
 // Left motor connected to output A
-// Right motor connected to output B
+// Right motor connected to output D
 	
 	private static final Port usPort = LocalEV3.get().getPort("S1");
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
