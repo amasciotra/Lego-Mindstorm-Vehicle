@@ -1,5 +1,5 @@
 package lab1EV3WallFollower;
-//TEST
+
 import lejos.hardware.sensor.*;
 
 import lejos.hardware.ev3.LocalEV3;
@@ -12,7 +12,7 @@ import lejos.hardware.Button;
 // Lab 1:  EV3 Wall Following robot
 //
 // This is the main class for the wall follower.
-//testing github connection
+
 
 public class Lab1 {
 
