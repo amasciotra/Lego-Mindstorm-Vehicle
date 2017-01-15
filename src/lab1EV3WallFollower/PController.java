@@ -5,19 +5,22 @@ public class PController implements UltrasonicController {
 	
 	private final int bandCenter, bandwidth;
 	private final int motorStraight = 200, FILTER_OUT = 20;
-	private final int motorTurnFast = 300;
-	private final int motorTurnSlow = 100;
+	private final int motorLow, motorHigh;
+	private final double scalingFactor = 0.3;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private int distance;
 	private int filterControl;
+	private int deltaDistance;
 	
 	public PController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
-					   int bandCenter, int bandwidth) {
+					   int bandCenter, int bandwidth, int motorHigh, int motorLow) {
 		//Default Constructor
 		this.bandCenter = bandCenter;
 		this.bandwidth = bandwidth;
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
+		this.motorLow = motorLow;
+		this.motorHigh = motorHigh;
 		leftMotor.setSpeed(motorStraight);					// Initalize motor rolling forward
 		rightMotor.setSpeed(motorStraight);
 		leftMotor.forward();
@@ -46,6 +49,27 @@ public class PController implements UltrasonicController {
 			// distance alone.
 			filterControl = 0;
 			this.distance = distance;
+			deltaDistance = bandCenter - distance;
+			if (deltaDistance < bandwidth || deltaDistance > (-1 * bandwidth)){
+				leftMotor.setSpeed(motorHigh);												// Set new speed
+				rightMotor.setSpeed(motorHigh);
+				leftMotor.forward();
+				rightMotor.forward();
+			} else if (deltaDistance > bandwidth){
+			//If deltaDistance is greater than the bandwidth, robot is too close to wall and speed should 
+			//be adjusted according to magnitude of deltaDistance
+				leftMotor.setSpeed((int) (motorHigh*(scalingFactor*deltaDistance)));		// Set new speed
+				rightMotor.setSpeed((int) (motorLow/(scalingFactor*deltaDistance)));
+				leftMotor.forward();
+				rightMotor.forward();
+			} else if (deltaDistance < (-1 * bandwidth)){
+			//If deltaDistance is less than the (negative) bandwidth, robot is too far from wall and speed 
+			//should be adjusted according to magnitude of deltaDistance
+				rightMotor.setSpeed((int) (motorHigh*(scalingFactor*deltaDistance)));		// Set new speed
+				leftMotor.setSpeed((int) (motorLow/(scalingFactor*deltaDistance)));
+				leftMotor.forward();
+				rightMotor.forward();
+			}
 			
 		}
 

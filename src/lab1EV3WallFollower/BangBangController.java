@@ -46,7 +46,7 @@ public class BangBangController implements UltrasonicController{
 			filterControl = 0;
 			this.distance = distance;
 			// TODO: process a movement based on the us distance passed in (BANG-BANG style)
-			if (distance > (bandCenter + bandwidth)){
+			if(distance > (bandCenter + bandwidth)){
 				leftMotor.setSpeed(motorLow);					// Set new speed
 				rightMotor.setSpeed(motorHigh);
 				leftMotor.forward();

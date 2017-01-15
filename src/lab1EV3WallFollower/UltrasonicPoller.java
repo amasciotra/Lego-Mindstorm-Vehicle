@@ -31,8 +31,14 @@ public class UltrasonicPoller extends Thread{
 		while (true) {
 			us.fetchSample(usData,0);							// acquire data
 			distance=(int)(usData[0]*100.0);					// extract from buffer, cast to int
-			cont.processUSData(distance);						// now take action depending on value
-			try { Thread.sleep(50); } catch(Exception e){}		// Poor man's timed sampling
+			while(distance < 200){
+				cont.processUSData(distance);					// now take action depending on value
+			}
+			try { 
+				Thread.sleep(50); 
+			} catch(Exception e){
+				
+			}													// Poor man's timed sampling
 		}
 	}
 

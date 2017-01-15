@@ -21,7 +21,7 @@ public class Lab1 {
 	private static final int bandCenter = 35;			// Offset from the wall (cm)
 	private static final int bandWidth = 2;				// Width of dead band (cm)
 	private static final int motorLow = 60;			// Speed of slower rotating wheel (deg/sec)
-	private static final int motorHigh = 140;			// Speed of the faster rotating wheel (deg/seec)
+	private static final int motorHigh = 120;			// Speed of the faster rotating wheel (deg/seec)
 	
 // Static Resources:
 //
@@ -46,7 +46,7 @@ public class Lab1 {
 		
 		BangBangController bangbang = new BangBangController(leftMotor, rightMotor,
 															 bandCenter, bandWidth, motorLow, motorHigh);
-		PController p = new PController(leftMotor, rightMotor, bandCenter, bandWidth);
+		PController p = new PController(leftMotor, rightMotor, bandCenter, bandWidth, motorLow, motorHigh);
 		
 		// Setup ultrasonic sensor
 		// Note that the EV3 version of leJOS handles sensors a bit differently.
