@@ -6,6 +6,8 @@ public class BangBangController implements UltrasonicController{
 	private final int motorLow, motorHigh;
 	private int distance;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
+	private int filterControl;  
+	private int FILTER_OUT = 20;
 	
 	public BangBangController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 							  int bandCenter, int bandwidth, int motorLow, int motorHigh) {
@@ -16,8 +18,8 @@ public class BangBangController implements UltrasonicController{
 		this.motorHigh = motorHigh;
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
-		leftMotor.setSpeed(motorHigh);				// Start robot moving forward
-		rightMotor.setSpeed(motorHigh);
+		leftMotor.setSpeed(0);				// Start robot moving forward
+		rightMotor.setSpeed(0);
 		leftMotor.forward();
 		rightMotor.forward();
 	}
@@ -25,7 +27,48 @@ public class BangBangController implements UltrasonicController{
 	@Override
 	public void processUSData(int distance) {
 		this.distance = distance;
-		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
+		// rudimentary filter - toss out invalid samples corresponding to null
+		// signal.
+		// (n.b. this was not included in the Bang-bang controller, but easily
+		// could have).
+		//
+		if (distance >= 255 && filterControl < FILTER_OUT) {
+		// bad value, do not set the distance var, however do increment the
+		// filter value
+			filterControl++;
+		} else if (distance >= 255) {
+		// We have repeated large values, so there must actually be nothing
+		// there: leave the distance alone
+			this.distance = distance;
+		} else {
+		// distance went below 255: reset filter and leave
+		// distance alone.
+			filterControl = 0;
+			this.distance = distance;
+			// TODO: process a movement based on the us distance passed in (BANG-BANG style)
+			if (distance > (bandCenter + bandwidth)){
+				leftMotor.setSpeed(motorLow);					// Set new speed
+				rightMotor.setSpeed(motorHigh);
+				leftMotor.forward();
+				rightMotor.forward();
+			} else if (distance > 2 * bandwidth && distance < (bandCenter - bandwidth)){
+				leftMotor.setSpeed(motorHigh);					// Set new speed
+				rightMotor.setSpeed(motorLow);
+				leftMotor.forward();
+				rightMotor.forward();
+			} else if (distance <= 2 * bandwidth){
+				leftMotor.setSpeed(2 * motorHigh);					// Set new speed
+				rightMotor.setSpeed(motorLow/2);
+				leftMotor.forward();
+				rightMotor.forward();
+			} else {
+				//Continue forward at normal speed if within bandwidth of the band center
+				leftMotor.setSpeed(motorHigh);					// Set new speed
+				rightMotor.setSpeed(motorHigh);
+				leftMotor.forward();
+				rightMotor.forward();
+			}
+		}
 	}
 
 	@Override
