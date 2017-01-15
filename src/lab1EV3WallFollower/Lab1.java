@@ -12,6 +12,7 @@ import lejos.hardware.Button;
 // Lab 1:  EV3 Wall Following robot
 //
 // This is the main class for the wall follower.
+//testing github connection
 
 public class Lab1 {
 
