@@ -1,7 +1,6 @@
 package lab1EV3WallFollower;
 //TEST
 import lejos.hardware.sensor.*;
-
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
@@ -18,9 +17,9 @@ public class Lab1 {
 // Parameters: adjust these for desired performance
 
 	private static final int bandCenter = 35;			// Offset from the wall (cm)
-	private static final int bandWidth = 2;				// Width of dead band (cm)
-	private static final int motorLow = 60;			// Speed of slower rotating wheel (deg/sec)
-	private static final int motorHigh = 120;			// Speed of the faster rotating wheel (deg/seec)
+	private static final int bandWidth = 3;				// Width of dead band (cm)
+	private static final int motorLow = 70;			// Speed of slower rotating wheel (deg/sec)
+	private static final int motorHigh = 150;			// Speed of the faster rotating wheel (deg/seec)
 	
 // Static Resources:
 //
@@ -70,7 +69,7 @@ public class Lab1 {
 		// appropriate constructor.
 		
 		switch(option) {
-		case Button.ID_LEFT:										// Bang-bang control selected
+		case Button.ID_LEFT: 										// Bang-bang control selected
 			usPoller = new UltrasonicPoller(usDistance, usData, bangbang);
 			printer = new Printer(option, bangbang);
 			break;
