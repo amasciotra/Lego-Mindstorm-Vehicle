@@ -7,7 +7,7 @@ import lejos.hardware.port.Port;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.Button;
 
-//
+//Mon 4:35
 // Lab 1:  EV3 Wall Following robot
 //
 // This is the main class for the wall follower.
@@ -18,9 +18,9 @@ public class Lab1 {
 // Parameters: adjust these for desired performance
 
 	private static final int bandCenter = 35;			// Offset from the wall (cm)
-	private static final int bandWidth = 3;				// Width of dead band (cm)
-	private static final int motorLow = 70;			// Speed of slower rotating wheel (deg/sec)
-	private static final int motorHigh = 150;			// Speed of the faster rotating wheel (deg/seec)
+	private static final int bandWidth = 2;				// Width of dead band (cm)
+	private static final int motorLow = 100;			// Speed of slower rotating wheel (deg/sec)
+	private static final int motorHigh = 200;			// Speed of the faster rotating wheel (deg/seec)
 	
 // Static Resources:
 //
