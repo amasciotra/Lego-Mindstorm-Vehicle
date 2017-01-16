@@ -31,7 +31,6 @@ public class BangBangController implements UltrasonicController{
 		// signal.
 		// (n.b. this was not included in the Bang-bang controller, but easily
 		// could have).
-		//
 		if (distance >= 255 && filterControl < FILTER_OUT) {
 		// bad value, do not set the distance var, however do increment the
 		// filter value
