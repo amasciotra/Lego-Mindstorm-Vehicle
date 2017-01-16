@@ -4,11 +4,13 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 public class PController implements UltrasonicController {
 	
 	private final int bandCenter, bandwidth;
+	
 	private final int FILTER_OUT = 20;
 	private final int motorLow, motorHigh;
 	private final int maxSpeed = 180;
 	private final int minSpeed = 70;
 	private final double scalingFactor = 0.8;
+	
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private int distance;
 	private int filterControl;
