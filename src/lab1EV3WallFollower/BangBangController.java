@@ -18,8 +18,8 @@ public class BangBangController implements UltrasonicController{
 		this.motorHigh = motorHigh;
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
-		leftMotor.setSpeed(0);				// Start robot moving forward
-		rightMotor.setSpeed(0);
+		leftMotor.setSpeed(motorLow);				// Start robot moving forward
+		rightMotor.setSpeed(motorLow);
 		leftMotor.forward();
 		rightMotor.forward();
 	}
@@ -44,29 +44,28 @@ public class BangBangController implements UltrasonicController{
 		// distance alone.
 			filterControl = 0;
 			this.distance = distance;
-			// TODO: process a movement based on the us distance passed in (BANG-BANG style)
-			if(distance > (bandCenter + bandwidth)){
-				leftMotor.setSpeed(motorLow);					// Set new speed
-				rightMotor.setSpeed(motorHigh);
-				leftMotor.forward();
-				rightMotor.forward();
-			} else if (distance > 2 * bandwidth && distance < (bandCenter - bandwidth)){
-				leftMotor.setSpeed(motorHigh);					// Set new speed
-				rightMotor.setSpeed(motorLow);
-				leftMotor.forward();
-				rightMotor.forward();
-			} else if (distance <= 2 * bandwidth){
-				leftMotor.setSpeed(2 * motorHigh);					// Set new speed
-				rightMotor.setSpeed(motorLow/2);
-				leftMotor.forward();
-				rightMotor.forward();
-			} else {
-				//Continue forward at normal speed if within bandwidth of the band center
-				leftMotor.setSpeed(motorHigh);					// Set new speed
-				rightMotor.setSpeed(motorHigh);
-				leftMotor.forward();
-				rightMotor.forward();
-			}
+		}
+		if(distance > (bandCenter + bandwidth)){
+			leftMotor.setSpeed(motorLow);					// Set new speed
+			rightMotor.setSpeed(motorHigh);
+			leftMotor.forward();
+			rightMotor.forward();
+		} else if (distance > 2 * bandwidth && distance < (bandCenter - bandwidth)){
+			leftMotor.setSpeed(motorHigh);					// Set new speed
+			rightMotor.setSpeed(motorLow);
+			leftMotor.forward();
+			rightMotor.forward();
+		} else if (distance <= 2 * bandwidth){
+			leftMotor.setSpeed(2 * motorHigh);					// Set new speed
+			rightMotor.setSpeed(motorLow/2);
+			leftMotor.forward();
+			rightMotor.forward();
+		} else {
+			//Continue forward at normal speed if within bandwidth of the band center
+			leftMotor.setSpeed(motorHigh);					// Set new speed
+			rightMotor.setSpeed(motorHigh);
+			leftMotor.forward();
+			rightMotor.forward();
 		}
 	}
 
