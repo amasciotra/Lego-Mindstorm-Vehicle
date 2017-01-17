@@ -7,9 +7,9 @@ public class PController implements UltrasonicController {
 	
 	private final int FILTER_OUT = 20;
 	private final int motorLow, motorHigh;
-	private final int maxSpeed = 180;
-	private final int minSpeed = 70;
-	private final double scalingFactor = 0.8;
+	private final int maxSpeed = 400;
+	private final int minSpeed = 125;
+	private final double scalingFactor = .9;
 	
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private int distance;
@@ -68,15 +68,15 @@ public class PController implements UltrasonicController {
 		//If error is greater than the bandwidth, robot is too close to wall and speed should 
 		//be adjusted according to magnitude of error. The maximum possible speed is capped at 
 		//"maxSpeed". Minimum possible speed is capped at "minSpeed".
-			leftMotor.setSpeed(Math.min(highSpeed, maxSpeed));							// Set new speed
-			rightMotor.setSpeed(Math.max(lowSpeed, minSpeed));
+			leftMotor.setSpeed(Math.max(highSpeed, maxSpeed));							// Set new speed
+			rightMotor.setSpeed(Math.min(lowSpeed, minSpeed));
 			leftMotor.forward();
 			rightMotor.forward();
 		} else {
 		//If error is less than the (negative) bandwidth, robot is too far from wall and speed 
 		//should be adjusted according to magnitude of error. The maximum possible speed is capped at 
 		//"maxSpeed". Minimum possible speed is capped at "minSpeed".
-			leftMotor.setSpeed(Math.max(lowSpeed, minSpeed));							// Set new speed
+			leftMotor.setSpeed(Math.max(lowSpeed+50, minSpeed+50));							// Set new speed
 			rightMotor.setSpeed(Math.min(highSpeed, maxSpeed));
 			leftMotor.forward();
 			rightMotor.forward();

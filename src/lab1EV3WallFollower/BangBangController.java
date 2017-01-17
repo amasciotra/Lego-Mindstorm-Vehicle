@@ -50,16 +50,16 @@ public class BangBangController implements UltrasonicController{
 			rightMotor.setSpeed(motorHigh);
 			leftMotor.forward();
 			rightMotor.forward();
-		} else if (distance > 2 * bandwidth && distance < (bandCenter - bandwidth)){
+		} else if (distance > 4 * bandwidth && distance < (bandCenter - bandwidth)){
 			leftMotor.setSpeed(motorHigh);					// Too close, set new speed
 			rightMotor.setSpeed(motorLow);
 			leftMotor.forward();
 			rightMotor.forward();
-		} else if (distance <= 2 * bandwidth){
-			leftMotor.setSpeed(2 * motorHigh);				// Way too close, set new speed
-			rightMotor.setSpeed(motorLow/2);
+		} else if (distance <= 7.5 * bandwidth){
+			leftMotor.setSpeed(4 * motorHigh);				// Way too close, set new speed
+			rightMotor.setSpeed(motorHigh);
 			leftMotor.forward();
-			rightMotor.forward();
+			rightMotor.backward();
 		} else {
 			//Continue forward at normal speed if within bandwidth of the band center
 			leftMotor.setSpeed(motorHigh);					// Set new speed
