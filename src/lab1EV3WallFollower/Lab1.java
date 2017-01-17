@@ -7,7 +7,7 @@ import lejos.hardware.port.Port;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.Button;
 
-//Mon 7:13
+//Tuesday 1pm
 // Lab 1:  EV3 Wall Following robot
 //
 // This is the main class for the wall follower.
