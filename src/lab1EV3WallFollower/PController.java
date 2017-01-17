@@ -77,7 +77,7 @@ public class PController implements UltrasonicController {
 		//should be adjusted according to magnitude of error. The maximum possible speed is capped at 
 		//"maxSpeed". Minimum possible speed is capped at "minSpeed".
 			leftMotor.setSpeed(Math.max(lowSpeed+50, minSpeed+50));							// Set new speed
-			rightMotor.setSpeed(Math.min(highSpeed, maxSpeed));
+			rightMotor.setSpeed(Math.min(highSpeed-50, maxSpeed-50));
 			leftMotor.forward();
 			rightMotor.forward();
 		}		
