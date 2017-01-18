@@ -1,5 +1,5 @@
 // Lab2.java
-//Test
+//Testing testing
 package lab2EV3Odometer;
 
 import lejos.hardware.Button;
