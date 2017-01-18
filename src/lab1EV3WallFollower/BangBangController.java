@@ -1,14 +1,14 @@
 package lab1EV3WallFollower;
 import lejos.hardware.motor.*;
-
+//Test
 public class BangBangController implements UltrasonicController{
 	private final int bandCenter, bandwidth;
 	private final int motorLow, motorHigh;
 	private int distance;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
-	private int filterControl;  
+	private int filterControl;
 	private int FILTER_OUT = 20;
-	
+
 	public BangBangController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 							  int bandCenter, int bandwidth, int motorLow, int motorHigh) {
 		//Default Constructor
@@ -23,7 +23,7 @@ public class BangBangController implements UltrasonicController{
 		leftMotor.forward();
 		rightMotor.forward();
 	}
-	
+
 	@Override
 	public void processUSData(int distance) {
 		this.distance = distance;
