@@ -62,6 +62,7 @@ public class Odometer extends Thread {
 			double deltaPhiRadius = WHEEL_RADIUS * deltaPhi;
 			double deltaRhoRadius = WHEEL_RADIUS * deltaRho;
 			//Compute average delta 
+			double deltaAvg = deltaRhoRadius + deltaPhiRadius / 2;
 			synchronized (lock) {
 				/**
 				 * Don't use the variables x, y, or theta anywhere but here!
