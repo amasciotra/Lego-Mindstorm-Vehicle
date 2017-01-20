@@ -25,7 +25,7 @@ public class SquareDriver {
 			// the odometer will be interrupted by another thread
 		}
 
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4 * 10; i++) {
 			// Drive forward two tiles
 			leftMotor.setSpeed(FORWARD_SPEED);
 			rightMotor.setSpeed(FORWARD_SPEED);

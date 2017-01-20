@@ -18,19 +18,19 @@ public class Odometer extends Thread {
 	private static final double WHEEL_RADIUS = 2.07;
 	private static final double WHEELBASE_WIDTH = 18.5;
 	private static final double TWO_PI = 2 * Math.PI;
-	//whe
+	
 	// lock object for mutual exclusion
 	private Object lock;
 
-	// default constructor
+	// Default constructor
 	public Odometer(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
-		/*this.x = 0.0;
+		this.x = 0.0;
 		this.y = 0.0;
 		this.theta = 0.0;
 		this.leftMotorTachoCount = 0;
-		this.rightMotorTachoCount = 0;*/
+		this.rightMotorTachoCount = 0;
 		lock = new Object();
 	}
 
@@ -39,8 +39,8 @@ public class Odometer extends Thread {
 		long updateStart, updateEnd;
 		
 		 // Reset motor tacho counts
-	    Motor.D.resetTachoCount();
-	    Motor.A.resetTachoCount();
+	    leftMotor.resetTachoCount();
+	    rightMotor.resetTachoCount();
 	    // Set starting position
 	    x = 0;
 	    y = 0;
@@ -52,8 +52,8 @@ public class Odometer extends Thread {
 			
 			//Find the current phi and rho by converting tacho count of each 
 			//motor to radians (rpm to rads)
-			phi = Math.toRadians(Motor.A.getTachoCount());
-			rho = Math.toRadians(Motor.D.getTachoCount());
+			phi = Math.toRadians(leftMotor.getTachoCount());
+			rho = Math.toRadians(rightMotor.getTachoCount());
 			//Compute the difference from previous values
 			double deltaPhi = phi - oldPhi;
 			double deltaRho = rho - oldRho;
@@ -65,8 +65,8 @@ public class Odometer extends Thread {
 			//Compute delta theta (robot position)
 			double deltaTheta = (deltaPhiRadius - deltaRhoRadius) / WHEELBASE_WIDTH;
 			//Find delta x and delta y (y is forward, x is right)
-			double deltaX = deltaAvg * Math.cos(theta + theta / 2);
-			double deltaY = deltaAvg * Math.cos(theta + theta / 2);
+			double deltaX = deltaAvg * Math.cos(theta + (theta / 2));
+			double deltaY = deltaAvg * Math.sin(theta + (theta / 2));
 			
 			synchronized (lock) {
 				/**

@@ -3,8 +3,12 @@
  */
 package lab2EV3Odometer;
 
+//import lejos.nxt.*;
+
 public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;
+	//Declare odometer, initialize color sensor
+	//private ColorSensor colorSensor = new ColorSensor(SensorPort(S1));
 	private Odometer odometer;
 	//Useful math constants
 	private static final double TWO_PI = Math.PI * 2;
@@ -22,7 +26,9 @@ public class OdometryCorrection extends Thread {
 			correctionStart = System.currentTimeMillis();
 
 			// put your correction code here
-
+			//Read sensor
+			//int lightValue = lightSensor.getNormalizedLightValue();
+			//Check if we are reading a line
 			// this ensure the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();
 			if (correctionEnd - correctionStart < CORRECTION_PERIOD) {

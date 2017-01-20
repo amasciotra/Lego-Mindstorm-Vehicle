@@ -31,7 +31,7 @@ public class Lab2 {
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		Odometer odometer = new Odometer(leftMotor, rightMotor);
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer,t);
-		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
+		//OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
 
 		do {
 			// Clear the display
@@ -49,16 +49,17 @@ public class Lab2 {
 				&& buttonChoice != Button.ID_RIGHT);
 
 		if (buttonChoice == Button.ID_LEFT) {
-			
+			// start only the odometer and the odometry display
+
 			leftMotor.forward();
 			leftMotor.flt();
 			rightMotor.forward();
 			rightMotor.flt();
 			
 			odometer.start();
-			odometryDisplay.start();
-			
-		} else {
+			odometryDisplay.start();	
+		} 
+		else {
 			// Start the odometer, the odometry display and (possibly) the
 			// odometry correction
 			
@@ -68,10 +69,10 @@ public class Lab2 {
 
 			// Spawn a new Thread to avoid SquareDriver.drive() from blocking
 			(new Thread() {
-				public void run() {
-					SquareDriver.drive(leftMotor, rightMotor, WHEEL_RADIUS, WHEEL_RADIUS, TRACK);
-				}
-			}).start();
+					public void run() {
+						SquareDriver.drive(leftMotor, rightMotor, WHEEL_RADIUS, WHEEL_RADIUS, TRACK);
+					}
+				}).start();
 		}
 		
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
