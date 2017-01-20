@@ -11,29 +11,29 @@ public class SquareDriver {
 
 	public static void drive(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 			double leftRadius, double rightRadius, double width) {
-		// reset the motors
+		// Reset the motors
 		for (EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] { leftMotor, rightMotor }) {
 			motor.stop();
 			motor.setAcceleration(3000);
 		}
 
-		// wait 5 seconds
+		// Wait 5 seconds
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// there is nothing to be done here because it is not expected that
+			// There is nothing to be done here because it is not expected that
 			// the odometer will be interrupted by another thread
 		}
 
 		for (int i = 0; i < 4; i++) {
-			// drive forward two tiles
+			// Drive forward two tiles
 			leftMotor.setSpeed(FORWARD_SPEED);
 			rightMotor.setSpeed(FORWARD_SPEED);
 
 			leftMotor.rotate(convertDistance(leftRadius, 60.96), true);
 			rightMotor.rotate(convertDistance(rightRadius, 60.96), false);
 
-			// turn 90 degrees clockwise
+			// Turn 90 degrees clockwise
 			leftMotor.setSpeed(ROTATE_SPEED);
 			rightMotor.setSpeed(ROTATE_SPEED);
 
