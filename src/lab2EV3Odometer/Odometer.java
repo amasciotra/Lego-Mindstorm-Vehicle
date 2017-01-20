@@ -1,19 +1,25 @@
 /*
  * Odometer.java
  */
-
 package lab2EV3Odometer;
 
+import lejos.hardware.*;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.motor.Motor;
 
 public class Odometer extends Thread {
-	// robot position
+	// Robot position (given by x, y and theta, from xy-axis)
 	private double x, y, theta;
+	//Relevant tachometer readings in rads
+	private double phi, rho, oldPhi, oldRho;
 	private int leftMotorTachoCount, rightMotorTachoCount;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
-	// odometer update period, in ms
+	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
-
+	private static final double WHEEL_RADIUS = 2.07;
+	private static final double WHEELBASE_WIDTH = 18.5;
+	private static final double TWO_PI = 2 * Math.PI;
+	//whe
 	// lock object for mutual exclusion
 	private Object lock;
 
@@ -32,11 +38,30 @@ public class Odometer extends Thread {
 	// run method (required for Thread)
 	public void run() {
 		long updateStart, updateEnd;
-
+		
+		 // Reset motor tacho counts
+	    Motor.B.resetTachoCount();
+	    Motor.A.resetTachoCount();
+	    // Set starting position
+	    x = 0;
+	    y = 0;
+	    theta =  Math.PI / 2;
+	    
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			//TODO put (some of) your odometer code here
-
+			
+			
+			//Find the current phi and rho by converting tacho count of each 
+			//motor to radians (rpm to rads)
+			phi = Math.toRadians(Motor.A.getTachoCount());
+			rho = Math.toRadians(Motor.B.getTachoCount());
+			//Compute the difference from previous values
+			double deltaPhi = phi - oldPhi;
+			double deltaRho = rho - oldRho;
+			//Scale delta angle by the wheel radius
+			double deltaPhiRadius = WHEEL_RADIUS * deltaPhi;
+			double deltaRhoRadius = WHEEL_RADIUS * deltaRho;
+			//Compute average delta 
 			synchronized (lock) {
 				/**
 				 * Don't use the variables x, y, or theta anywhere but here!
