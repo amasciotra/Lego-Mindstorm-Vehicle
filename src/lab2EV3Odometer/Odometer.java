@@ -16,7 +16,7 @@ public class Odometer extends Thread {
 	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
 	private static final double WHEEL_RADIUS = 2.07;
-	private static final double WHEELBASE_WIDTH = 18.5;
+	private static final double WHEELBASE_WIDTH = 18.50;//real 18.6
 	private static final double TWO_PI = 2 * Math.PI;
 	
 	// lock object for mutual exclusion
@@ -57,6 +57,8 @@ public class Odometer extends Thread {
 			//Compute the difference from previous values
 			double deltaPhi = phi - oldPhi;
 			double deltaRho = rho - oldRho;
+			oldPhi=phi;
+			oldRho=rho;
 			//Scale delta angle by the wheel radius
 			double deltaPhiRadius = WHEEL_RADIUS * deltaPhi;
 			double deltaRhoRadius = WHEEL_RADIUS * deltaRho;
@@ -65,8 +67,8 @@ public class Odometer extends Thread {
 			//Compute delta theta (robot position)
 			double deltaTheta = (deltaPhiRadius - deltaRhoRadius) / WHEELBASE_WIDTH;
 			//Find delta x and delta y (y is forward, x is right)
-			double deltaX = deltaAvg * Math.cos(theta + (theta / 2));
-			double deltaY = deltaAvg * Math.sin(theta + (theta / 2));
+			double deltaX = deltaAvg * Math.cos(theta + (deltaTheta / 2));
+			double deltaY = deltaAvg * Math.sin(theta + (deltaTheta / 2));
 			
 			synchronized (lock) {
 				/**

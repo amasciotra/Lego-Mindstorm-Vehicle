@@ -6,8 +6,8 @@ package lab2EV3Odometer;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class SquareDriver {
-	private static final int FORWARD_SPEED = 250;
-	private static final int ROTATE_SPEED = 150;
+	private static final int FORWARD_SPEED = 250;//250
+	private static final int ROTATE_SPEED = 150;//150
 
 	public static void drive(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 			double leftRadius, double rightRadius, double width) {
@@ -25,7 +25,7 @@ public class SquareDriver {
 			// the odometer will be interrupted by another thread
 		}
 
-		for (int i = 0; i < 4 * 10; i++) {
+		for (int i = 0; i < 4; i++) {
 			// Drive forward two tiles
 			leftMotor.setSpeed(FORWARD_SPEED);
 			rightMotor.setSpeed(FORWARD_SPEED);

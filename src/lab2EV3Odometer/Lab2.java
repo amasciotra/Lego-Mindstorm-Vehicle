@@ -1,8 +1,10 @@
 // Lab2.java
+
 //Omega c is rotation about cart center, omega w as wheel rotation, rw and rc are radii of wheel and turning circle
 //omega w = omega c * (rc/rw) is the ratio (how to turn wheel at rate to achieve cart velocity of omega c
 //Also note D = 2pi(rw) * omega w /360
 //new test
+//Alex edits Friday night currently 620pm
 package lab2EV3Odometer;
 
 import lejos.hardware.Button;
@@ -22,7 +24,7 @@ public class Lab2 {
 
 	// Constants
 	public static final double WHEEL_RADIUS = 2.07;
-	public static final double TRACK = 18.5;
+	public static final double TRACK = 18.50;//real 18.60
 
 	public static void main(String[] args) {
 		int buttonChoice;
