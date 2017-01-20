@@ -3,9 +3,8 @@
  */
 package lab2EV3Odometer;
 
-import lejos.hardware.*;
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.motor.Motor;
+
+import lejos.hardware.motor.*;
 
 public class Odometer extends Thread {
 	// Robot position (given by x, y and theta, from xy-axis)
@@ -27,11 +26,11 @@ public class Odometer extends Thread {
 	public Odometer(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
-		this.x = 0.0;
+		/*this.x = 0.0;
 		this.y = 0.0;
 		this.theta = 0.0;
 		this.leftMotorTachoCount = 0;
-		this.rightMotorTachoCount = 0;
+		this.rightMotorTachoCount = 0;*/
 		lock = new Object();
 	}
 
@@ -40,7 +39,7 @@ public class Odometer extends Thread {
 		long updateStart, updateEnd;
 		
 		 // Reset motor tacho counts
-	    Motor.B.resetTachoCount();
+	    Motor.D.resetTachoCount();
 	    Motor.A.resetTachoCount();
 	    // Set starting position
 	    x = 0;
@@ -54,7 +53,7 @@ public class Odometer extends Thread {
 			//Find the current phi and rho by converting tacho count of each 
 			//motor to radians (rpm to rads)
 			phi = Math.toRadians(Motor.A.getTachoCount());
-			rho = Math.toRadians(Motor.B.getTachoCount());
+			rho = Math.toRadians(Motor.D.getTachoCount());
 			//Compute the difference from previous values
 			double deltaPhi = phi - oldPhi;
 			double deltaRho = rho - oldRho;
@@ -63,6 +62,12 @@ public class Odometer extends Thread {
 			double deltaRhoRadius = WHEEL_RADIUS * deltaRho;
 			//Compute average delta 
 			double deltaAvg = deltaRhoRadius + deltaPhiRadius / 2;
+			//Compute delta theta (robot position)
+			double deltaTheta = (deltaPhiRadius - deltaRhoRadius) / WHEELBASE_WIDTH;
+			//Find delta x and delta y (y is forward, x is right)
+			double deltaX = deltaAvg * Math.cos(theta + theta / 2);
+			double deltaY = deltaAvg * Math.cos(theta + theta / 2);
+			
 			synchronized (lock) {
 				/**
 				 * Don't use the variables x, y, or theta anywhere but here!
@@ -70,7 +75,12 @@ public class Odometer extends Thread {
 				 * Do not perform complex math
 				 * 
 				 */
-				theta = -0.7376; //TODO replace example value
+				
+				//Update x, y and theta
+				x += deltaX;
+				y += deltaY;
+				theta += deltaTheta;
+				theta = theta % TWO_PI;
 			}
 
 			// this ensures that the odometer only runs once every period
@@ -87,9 +97,9 @@ public class Odometer extends Thread {
 		}
 	}
 
-	// accessors
+	// Accessors
 	public void getPosition(double[] position, boolean[] update) {
-		// ensure that the values don't change while the odometer is running
+		// Ensure that the values don't change while the odometer is running
 		synchronized (lock) {
 			if (update[0])
 				position[0] = x;
@@ -130,7 +140,7 @@ public class Odometer extends Thread {
 		return result;
 	}
 
-	// mutators
+	// Mutators
 	public void setPosition(double[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running
 		synchronized (lock) {
