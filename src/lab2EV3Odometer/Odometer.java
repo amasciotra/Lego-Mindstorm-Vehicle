@@ -60,12 +60,12 @@ public class Odometer extends Thread {
 			oldPhi = phi;
 			oldRho = rho;
 			//Scale delta angle by the wheel radius
-			double deltaPhiRadius = WHEEL_RADIUS * deltaPhi;
-			double deltaRhoRadius = WHEEL_RADIUS * deltaRho;
+			double deltaPhiArc = WHEEL_RADIUS * deltaPhi;
+			double deltaRhoArc = WHEEL_RADIUS * deltaRho;
 			//Compute average delta 
-			double deltaAvg = deltaRhoRadius + deltaPhiRadius / 2;
+			double deltaAvg = deltaRhoArc + deltaPhiArc / 2;
 			//Compute delta theta (robot position)
-			double deltaTheta = (deltaPhiRadius - deltaRhoRadius) / WHEELBASE_WIDTH;
+			double deltaTheta = (deltaPhiArc - deltaRhoArc) / WHEELBASE_WIDTH;
 			//Find delta x and delta y (y is forward, x is right)
 			double deltaX = deltaAvg * Math.cos(theta + (deltaTheta / 2));
 			double deltaY = deltaAvg * Math.sin(theta + (deltaTheta / 2));
@@ -79,7 +79,7 @@ public class Odometer extends Thread {
 				 */
 				
 				//Update x, y and theta
-				x += deltaX;
+				x = deltaX;
 				y += deltaY;
 				theta += deltaTheta;
 				theta = theta % TWO_PI;
