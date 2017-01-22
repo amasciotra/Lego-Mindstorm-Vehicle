@@ -57,8 +57,8 @@ public class Odometer extends Thread {
 			//Compute the difference from previous values
 			double deltaPhi = phi - oldPhi;
 			double deltaRho = rho - oldRho;
-			oldPhi=phi;
-			oldRho=rho;
+			oldPhi = phi;
+			oldRho = rho;
 			//Scale delta angle by the wheel radius
 			double deltaPhiRadius = WHEEL_RADIUS * deltaPhi;
 			double deltaRhoRadius = WHEEL_RADIUS * deltaRho;
