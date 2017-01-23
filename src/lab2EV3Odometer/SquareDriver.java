@@ -30,15 +30,15 @@ public class SquareDriver {
 			leftMotor.setSpeed(FORWARD_SPEED);
 			rightMotor.setSpeed(FORWARD_SPEED);
 
-			leftMotor.rotate(convertDistance(leftRadius, 60.96), false);
-			rightMotor.rotate(convertDistance(rightRadius, 60.96), true);
+			leftMotor.rotate(convertDistance(leftRadius, 60.96), true);
+			rightMotor.rotate(convertDistance(rightRadius, 60.96), false);
 
 			// Turn 90 degrees clockwise
 			leftMotor.setSpeed(ROTATE_SPEED);
 			rightMotor.setSpeed(ROTATE_SPEED);
 
-			leftMotor.rotate(convertAngle(leftRadius, width, 90.0), false);
-			rightMotor.rotate(-convertAngle(rightRadius, width, 90.0), true);
+			leftMotor.rotate(convertAngle(leftRadius, width, 90.0), true);
+			rightMotor.rotate(-convertAngle(rightRadius, width, 90.0), false);
 		}
 	}
 
