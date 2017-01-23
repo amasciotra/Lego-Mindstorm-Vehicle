@@ -75,7 +75,7 @@ public class OdometryCorrection extends Thread {
 					double y = odometer.getY() + yError;
 					// Send y to closest line
 					y = Math.round(y / TILE_LENGTH) * TILE_LENGTH;
-					// Correct y, removing the error
+					// Correct y
 					odometer.setY(y);
 				} else {
 					Sound.playNote(Sound.FLUTE, 1000, 200);
@@ -85,7 +85,7 @@ public class OdometryCorrection extends Thread {
 					double x = odometer.getX() + xError;
 					// Send x to closest line
 					x = Math.round(x / TILE_LENGTH) * TILE_LENGTH;
-					// Correct x, Removing the offset
+					// Correct x
 					odometer.setX(x);
 				}
 				// Set line as crossed until line is no longer being read
