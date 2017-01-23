@@ -62,6 +62,7 @@ public class OdometryCorrection extends Thread {
 			if(getSample()[0] < LINE_LIGHT && !crossed){
 				//Play sound
 				Sound.playNote(Sound.FLUTE, 400, 200);
+
 				//Increment counter
 				count++;
 				//Ignore first line counted after each turn
