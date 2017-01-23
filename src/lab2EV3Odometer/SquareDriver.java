@@ -6,8 +6,8 @@ package lab2EV3Odometer;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class SquareDriver {
-	private static final int FORWARD_SPEED = 250;//250
-	private static final int ROTATE_SPEED = 150;//150
+	private static final int FORWARD_SPEED = 220;//250
+	private static final int ROTATE_SPEED = 120;//150
 
 	public static void drive(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 			double leftRadius, double rightRadius, double width) {
@@ -35,7 +35,7 @@ public class SquareDriver {
 
 			// Turn 90 degrees clockwise
 			leftMotor.setSpeed(ROTATE_SPEED);
-			rightMotor.setSpeed(ROTATE_SPEED);
+			rightMotor.setSpeed(ROTATE_SPEED - 5);
 
 			leftMotor.rotate(convertAngle(leftRadius, width, 90.0), true);
 			rightMotor.rotate(-convertAngle(rightRadius, width, 90.0), false);
