@@ -3,14 +3,10 @@
  */
 package lab2EV3Odometer;
 
-import java.awt.List;
-import java.util.ArrayList;
-
 import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
-import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
 
 
@@ -27,7 +23,9 @@ public class OdometryCorrection extends Thread {
 	private static boolean crossed;
 	// Spacing of the tiles in centimeters
 	private static final double TILE_LENGTH = 30.48;
-	private static final double HALF_TILE_LENGTH = TILE_LENGTH/2;
+	/* Might need later????
+	 * private static final double HALF_TILE_LENGTH = TILE_LENGTH/2;
+	 */
 	//Useful math constants
 	private static final double TWO_PI = Math.PI * 2;
 	private static final double ONE_QUARTER_PI = Math.PI / 4;
