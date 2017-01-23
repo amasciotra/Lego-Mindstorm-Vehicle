@@ -13,12 +13,13 @@ import lejos.hardware.sensor.*;
 import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
 
+
 public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;
 	//Declare odometer, initialize color sensor
-	private static final Port usPort = LocalEV3.get().getPort("S1");
-	NXTLightSensor lightSensor = new NXTLightSensor(usPort);	
-	//private ColorSensor colorSensor = new ColorSensor(SensorPort(S1));
+	private static final Port csPort = LocalEV3.get().getPort("S1");	
+	private EV3ColorSensor colorSensor = new EV3ColorSensor(csPort);
+	private static SampleProvider sampleProvider;
 	private Odometer odometer;
 	// The distance of the sensor from the wheel axle
 	private static final double SENSOR_OFFSET = 3.5;
@@ -31,10 +32,19 @@ public class OdometryCorrection extends Thread {
 	private static final double TWO_PI = Math.PI * 2;
 	private static final double ONE_QUARTER_PI = Math.PI / 4;
 	// Max light value reading for grid lines
-	private static final int LINE_LIGHT = 500;
+	private static final double LINE_LIGHT = 0.5;
 	// Constructor
 	public OdometryCorrection(Odometer odometer) {
 		this.odometer = odometer;
+	}
+	
+	private static float[] getSample(){
+		//Set up array to collect samples
+		int sampleSize = 1;
+		int offset = 0;
+		float[] sample = new float[sampleSize];
+		sampleProvider.fetchSample(sample, offset);
+		return sample;
 	}
 
 	// run method (required for Thread)
@@ -46,19 +56,16 @@ public class OdometryCorrection extends Thread {
 			// Initialize boolean to not crossed
 			crossed = false;
 			// Set sensor light
-			lightSensor.setFloodlight(true);
-			float[] sample = new float[1];
-			int offset = 0;
-			lightSensor.fetchSample(sample, offset);
-			float lightValue = sample[0];
+			colorSensor.setFloodlight(true);
+			
 
 			// put your correction code here
 			//Read sensor
 			//int lightValue = lightSensor.getNormalizedLightValue();
 			//Check if we are reading a line
-			if(lightValue < LINE_LIGHT && !crossed){
+			if(getSample()[0] < LINE_LIGHT && !crossed){
 				//Send theta to 0<=theta<=2pi
-				double theta = odometer.getTheta();
+				double theta = odometer.getTheta() % TWO_PI;
 				//Check which line direction was crossed using theta
 				if(theta >= ONE_QUARTER_PI && theta < 3 * ONE_QUARTER_PI || theta >= 5 * ONE_QUARTER_PI && theta < 7 * ONE_QUARTER_PI) {
 					Sound.playNote(Sound.FLUTE, 400, 200);
@@ -67,9 +74,9 @@ public class OdometryCorrection extends Thread {
 					// Error y accounts for sensor distance to axel
 					double y = odometer.getY() + yError;
 					// Send y to closest line
-					y = Math.round((y + HALF_TILE_LENGTH) / TILE_LENGTH) * TILE_LENGTH - HALF_TILE_LENGTH;
+					y = Math.round(y / TILE_LENGTH) * TILE_LENGTH;
 					// Correct y, removing the error
-					odometer.setY(y - yError / 2);
+					odometer.setY(y);
 				} else {
 					Sound.playNote(Sound.FLUTE, 1000, 200);
 					// Crossed vertical line
@@ -77,9 +84,9 @@ public class OdometryCorrection extends Thread {
 					// Error x to account for sensor to axel
 					double x = odometer.getX() + xError;
 					// Send x to closest line
-					x = Math.round((x + HALF_TILE_LENGTH) / TILE_LENGTH) * TILE_LENGTH - HALF_TILE_LENGTH;
+					x = Math.round(x / TILE_LENGTH) * TILE_LENGTH;
 					// Correct x, Removing the offset
-					odometer.setX(x - xError / 2);
+					odometer.setX(x);
 				}
 				// Set line as crossed until line is no longer being read
 				crossed = true;
