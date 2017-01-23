@@ -79,7 +79,7 @@ public class Odometer extends Thread {
 				 */
 				
 				//Update x, y and theta
-				x = deltaX;
+				x += deltaX;
 				y += deltaY;
 				theta += deltaTheta;
 				theta = theta % TWO_PI;

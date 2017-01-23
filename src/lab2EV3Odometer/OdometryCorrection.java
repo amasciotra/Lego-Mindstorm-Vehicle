@@ -48,7 +48,8 @@ public class OdometryCorrection extends Thread {
 	// run method (required for Thread)
 	public void run() {
 		long correctionStart, correctionEnd;
-
+		float[] sampletest = new float[1];
+		sampletest[0] = 
 		while (true) {
 			correctionStart = System.currentTimeMillis();
 			// Initialize boolean to not crossed
