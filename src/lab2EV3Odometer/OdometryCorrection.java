@@ -17,20 +17,15 @@ public class OdometryCorrection extends Thread {
 	private EV3ColorSensor colorSensor = new EV3ColorSensor(csPort);
 	private static SampleProvider sampleProvider;
 	private Odometer odometer;
-	// The distance of the sensor from the wheel axle
-	private static final double SENSOR_OFFSET = 3.5;
+	
 	//Boolean to determine if line is crossed
 	private static boolean crossed;
+
 	// Spacing of the tiles in centimeters
 	private static final double TILE_LENGTH = 30.48;
-	/* Might need later????
-	 * private static final double HALF_TILE_LENGTH = TILE_LENGTH/2;
-	 */
-	//Useful math constants
-	private static final double TWO_PI = Math.PI * 2;
-	private static final double ONE_QUARTER_PI = Math.PI / 4;
+ 	
 	// Max light value reading for grid lines
-	private static final double LINE_LIGHT = 0.5;
+	private static final double LINE_LIGHT = 0.18;
 	// Constructor
 	public OdometryCorrection(Odometer odometer) {
 		this.odometer = odometer;
@@ -48,43 +43,53 @@ public class OdometryCorrection extends Thread {
 	// run method (required for Thread)
 	public void run() {
 		long correctionStart, correctionEnd;
-
+		
+		double xtempDistance = 0;
+		double ytempDistance = 0;
+		int count = 0;
 		while (true) {
 			correctionStart = System.currentTimeMillis();
 			// Initialize boolean to not crossed
 			crossed = false;
 			// Set sensor light
 			colorSensor.setFloodlight(true);
-			
-
+			//Operate sensor in reflection mode
+			sampleProvider = colorSensor.getRedMode();
 			// put your correction code here
 			//Read sensor
 			//int lightValue = lightSensor.getNormalizedLightValue();
 			//Check if we are reading a line
 			if(getSample()[0] < LINE_LIGHT && !crossed){
-				//Send theta to 0<=theta<=2pi
-				double theta = odometer.getTheta() % TWO_PI;
-				//Check which line direction was crossed using theta
-				if(theta >= ONE_QUARTER_PI && theta < 3 * ONE_QUARTER_PI || theta >= 5 * ONE_QUARTER_PI && theta < 7 * ONE_QUARTER_PI) {
-					Sound.playNote(Sound.FLUTE, 400, 200);
-					// Crossed horizontal line
-					double yError = Math.sin(theta) * SENSOR_OFFSET;
-					// Error y accounts for sensor distance to axel
-					double y = odometer.getY() + yError;
-					// Send y to closest line
-					y = Math.round(y / TILE_LENGTH) * TILE_LENGTH;
-					// Correct y
-					odometer.setY(y);
-				} else {
-					Sound.playNote(Sound.FLUTE, 1000, 200);
-					// Crossed vertical line
-					double xError = Math.cos(theta) * SENSOR_OFFSET;
-					// Error x to account for sensor to axel
-					double x = odometer.getX() + xError;
-					// Send x to closest line
-					x = Math.round(x / TILE_LENGTH) * TILE_LENGTH;
-					// Correct x
-					odometer.setX(x);
+				//Play sound
+				Sound.playNote(Sound.FLUTE, 400, 200);
+				//Get theta
+				double theta = odometer.getTheta();
+				//Increment counter
+				count++;
+				//Ignore first line counted after each turn
+				if(count == 1 || count == 4 || count == 7 || count == 10 || count > 12){
+					ytempDistance = odometer.getY();
+					xtempDistance = odometer.getX();
+				}
+				//Moving up - increment y by tile length for each tile crossed
+				else if(count > 1 && count <= 3){
+					ytempDistance += TILE_LENGTH;
+					odometer.setY(ytempDistance);
+				}
+				else if(count > 7 && count <=9){
+				//Moving down - decrement y by tile length for each tile crossed
+					ytempDistance -= TILE_LENGTH;
+					odometer.setY(ytempDistance);
+				}
+				//Moving right - increment x by tile length for each tile crossed
+				else if(count > 4 && count <= 7){
+					xtempDistance += TILE_LENGTH;
+					odometer.setX(xtempDistance);
+				}
+				//Moving left - decrement x by tile length for each tile crossed
+				else if(count > 10){
+					xtempDistance -= TILE_LENGTH;
+					odometer.setX(xtempDistance);
 				}
 				// Set line as crossed until line is no longer being read
 				crossed = true;

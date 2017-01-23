@@ -67,7 +67,7 @@ public class Odometer extends Thread {
 			//Compute delta theta (robot position)
 			double deltaTheta = (deltaPhiArc - deltaRhoArc) / WHEELBASE_WIDTH;
 			//Find delta x and delta y (y is forward, x is right)
-			double deltaX = deltaAvg * Math.cos(theta + (deltaTheta / 2));
+			double deltaX = -1 * deltaAvg * Math.cos(theta + (deltaTheta / 2));
 			double deltaY = deltaAvg * Math.sin(theta + (deltaTheta / 2));
 			
 			synchronized (lock) {
