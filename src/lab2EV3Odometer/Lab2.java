@@ -1,18 +1,15 @@
 // Lab2.java
 
-//Omega c is rotation about cart center, omega w as wheel rotation, rw and rc are radii of wheel and turning circle
-//omega w = omega c * (rc/rw) is the ratio (how to turn wheel at rate to achieve cart velocity of omega c
-//Also note D = 2pi(rw) * omega w /360
-//new test
 //Alex edits Friday night currently 620pm
+//Thomas edit Monday morning 10 am
+
 package lab2EV3Odometer;
 
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.port.MotorPort;
-import lejos.hardware.port.Port;
+
 
 public class Lab2 {
 	
@@ -68,7 +65,7 @@ public class Lab2 {
 			
 			odometer.start();
 			odometryDisplay.start();
-			// OdometryCorrection.start();
+			odometryCorrection.start();
 
 			// Spawn a new Thread to avoid SquareDriver.drive() from blocking
 			(new Thread() {
