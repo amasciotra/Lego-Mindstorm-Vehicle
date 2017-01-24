@@ -16,10 +16,10 @@ public class Odometer extends Thread {
 	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
 	private static final double WHEEL_RADIUS = 2.07;
-	private static final double WHEELBASE_WIDTH = 18.58;//real 18.6
+	private static final double WHEELBASE_WIDTH = 18.54;//real 18.6
 	private static final double TWO_PI = 2 * Math.PI;
 	
-	// lock object for mutual exclusion
+	// Lock object for mutual exclusion
 	private Object lock;
 
 	// Default constructor
@@ -34,6 +34,18 @@ public class Odometer extends Thread {
 		lock = new Object();
 	}
 
+	//Theta correction(corrects negative angles)
+		public double thetaCorrection(double radians){
+			double omega = radians;
+			if(omega < 0){
+				omega =(TWO_PI) + omega;
+			}
+			else if(omega >= (TWO_PI)){
+				omega = omega % (TWO_PI);
+			}
+			return omega;
+		}
+		
 	// run method (required for Thread)
 	public void run() {
 		long updateStart, updateEnd;
@@ -41,6 +53,7 @@ public class Odometer extends Thread {
 		 // Reset motor tacho counts
 	    leftMotor.resetTachoCount();
 	    rightMotor.resetTachoCount();
+	   
 	    // Set starting position
 	    x = 0;
 	    y = 0;
@@ -83,6 +96,7 @@ public class Odometer extends Thread {
 				y += deltaY;
 				theta += deltaTheta;
 				theta = theta % TWO_PI;
+				theta = thetaCorrection(theta + deltaTheta);
 			}
 
 			// this ensures that the odometer only runs once every period
@@ -108,7 +122,8 @@ public class Odometer extends Thread {
 			if (update[1])
 				position[1] = y;
 			if (update[2])
-				position[2] = theta;
+				//Convert angle sent to odometer to degrees
+				position[2] = (theta * 360 / TWO_PI);
 		}
 	}
 
