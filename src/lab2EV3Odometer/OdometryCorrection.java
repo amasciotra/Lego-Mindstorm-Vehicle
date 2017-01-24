@@ -56,9 +56,8 @@ public class OdometryCorrection extends Thread {
 			//Operate sensor in reflection mode
 			sampleProvider = colorSensor.getRedMode();
 			// put your correction code here
-			//Read sensor
-			//int lightValue = lightSensor.getNormalizedLightValue();
-			//Check if we are reading a line
+	
+			//Check if we are reading a line (threshold technique)
 			if(getSample()[0] < LINE_LIGHT && !crossed){
 				//Play sound
 				Sound.playNote(Sound.FLUTE, 400, 200);
