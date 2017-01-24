@@ -16,7 +16,7 @@ public class Odometer extends Thread {
 	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
 	private static final double WHEEL_RADIUS = 2.07;
-	private static final double WHEELBASE_WIDTH = 18.60;//real 18.6
+	private static final double WHEELBASE_WIDTH = 18.58;//real 18.6
 	private static final double TWO_PI = 2 * Math.PI;
 	
 	// lock object for mutual exclusion
