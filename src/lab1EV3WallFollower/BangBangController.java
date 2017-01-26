@@ -9,6 +9,7 @@ public class BangBangController implements UltrasonicController{
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private int filterControl;
 	private int FILTER_OUT = 20;
+	private boolean ON = false;
 
 	public BangBangController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
 							  int bandCenter, int bandwidth, int motorLow, int motorHigh) {
@@ -28,48 +29,60 @@ public class BangBangController implements UltrasonicController{
 	@Override
 	public void processUSData(int distance) {
 		this.distance = distance;
-		// rudimentary filter - toss out invalid samples corresponding to null
-		// signal.
-		// (n.b. this was not included in the Bang-bang controller, but easily
-		// could have).
-		if (distance >= 255 && filterControl < FILTER_OUT) {
-		// bad value, do not set the distance var, however do increment the
-		// filter value
-			filterControl++;
-		} else if (distance >= 255) {
-		// We have repeated large values, so there must actually be nothing
-		// there: leave the distance alone
-			this.distance = distance;
-		} else {
-		// distance went below 255: reset filter and leave
-		// distance alone.
-			filterControl = 0;
-			this.distance = distance;
-		}
-		if(distance > (bandCenter + bandwidth)){
-			leftMotor.setSpeed(motorLow);					// Too far, set new speed
-			rightMotor.setSpeed(motorHigh);
-			leftMotor.forward();
-			rightMotor.forward();
-		} else if (distance > 4 * bandwidth && distance < (bandCenter - bandwidth)){
-			leftMotor.setSpeed(motorHigh);					// Too close, set new speed
-			rightMotor.setSpeed(motorLow);
-			leftMotor.forward();
-			rightMotor.forward();
-		} else if (distance <= 7.5 * bandwidth){
-			leftMotor.setSpeed(4 * motorHigh);				// Way too close, set new speed
-			rightMotor.setSpeed(motorHigh);
-			leftMotor.forward();
-			rightMotor.backward();
-		} else {
-			//Continue forward at normal speed if within bandwidth of the band center
-			leftMotor.setSpeed(motorHigh);					// Set new speed
-			rightMotor.setSpeed(motorHigh);
-			leftMotor.forward();
-			rightMotor.forward();
+		if (ON){
+			// rudimentary filter - toss out invalid samples corresponding to null
+			// signal.
+			// (n.b. this was not included in the Bang-bang controller, but easily
+			// could have).
+			if (distance >= 255 && filterControl < FILTER_OUT) {
+				// bad value, do not set the distance var, however do increment the
+				// filter value
+				filterControl++;
+			} else if (distance >= 255) {
+				// We have repeated large values, so there must actually be nothing
+				// there: leave the distance alone
+				this.distance = distance;
+			} else {
+				// distance went below 255: reset filter and leave
+				// distance alone.
+				filterControl = 0;
+				this.distance = distance;
+			}
+			if(distance > (bandCenter + bandwidth)){
+				leftMotor.setSpeed(motorLow);					// Too far, set new speed
+				rightMotor.setSpeed(motorHigh);
+				leftMotor.forward();
+				rightMotor.forward();
+			} else if (distance > 4 * bandwidth && distance < (bandCenter - bandwidth)){
+				leftMotor.setSpeed(motorHigh);					// Too close, set new speed
+				rightMotor.setSpeed(motorLow);
+				leftMotor.forward();
+				rightMotor.forward();
+			} else if (distance <= 7.5 * bandwidth){
+				leftMotor.setSpeed(4 * motorHigh);				// Way too close, set new speed
+				rightMotor.setSpeed(motorHigh);
+				leftMotor.forward();
+				rightMotor.backward();
+			} else {
+				//Continue forward at normal speed if within bandwidth of the band center
+				leftMotor.setSpeed(motorHigh);					// Set new speed
+				rightMotor.setSpeed(motorHigh);
+				leftMotor.forward();
+				rightMotor.forward();
+			}
 		}
 	}
 
+	public void turnON()
+	{
+		ON = true;
+	}
+	
+	public void turnOFF()
+	{
+		ON = false;
+	}
+	
 	@Override
 	public int readUSDistance() {
 		return this.distance;
