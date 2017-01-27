@@ -49,8 +49,7 @@ public class Navigation extends Thread {
     public void run(){  
     	
     	//Demo Part 1
-    	if(!isAvoiding)
-    	{
+    	if(!isAvoiding) {
     		for (int i = 0; i < 4; i++) {
     			isNavigating = true;
     			while(isNavigating){
@@ -59,17 +58,13 @@ public class Navigation extends Thread {
     			}
     		}
     	}
-    	else
-    	{
-    		for (int i=0; i<2; i++)
-			{	
+    	else {
+    		for (int i=0; i<2; i++) {	
 				isNavigating = true;
-				if (i == 1)
-				{
+				if (i == 1) {
 					isAvoiding = true;
 				}
-				while (isNavigating)  
-				{
+				while (isNavigating) {
 					travelTo(x2[i],y2[i]);
 				}
 			}
@@ -77,29 +72,26 @@ public class Navigation extends Thread {
     } 
   
 void travelTo(double x, double y) {
-	if(isAvoiding)// Starts part 2 of demo
-	{	
+	if(isAvoiding) {
+		// Starts part 2 of demo
 		if (bangbang.readUSDistance() <= 10) {
-			//To close to obstacle. Turn on bangbang for a specified amount of time
-			while (isAvoiding)
-			{
-			
-			leftMotor.setSpeed(ROTATE_SPEED);
-			rightMotor.setSpeed(ROTATE_SPEED);
+			//To close to obstacle. Turn on bang-bang for a specified amount of time
+			while (isAvoiding) {
+				leftMotor.setSpeed(ROTATE_SPEED);
+				rightMotor.setSpeed(ROTATE_SPEED);
 
-			//Rotate robot 90 degrees if wall encountered
-			leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, 90.0), true);	
-			rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, 90.0), false); 
-			bangbang.turnON();
-			try {
-				//Give the robot specified time to avoid obstacle
-				Thread.sleep(8500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} 
-			
-			bangbang.turnOFF();
-			isAvoiding = false; 
+				//Rotate robot 90 degrees if wall encountered
+				leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, 90.0), true);	
+				rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, 90.0), false); 
+				bangbang.turnON();
+				try {
+					//Give the robot specified time to avoid obstacle
+					Thread.sleep(8500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} 
+				bangbang.turnOFF();
+				isAvoiding = false; 
 			}
 		}
 	} else {
@@ -116,30 +108,46 @@ void travelTo(double x, double y) {
 			System.out.println("Destination reached!");
 		} else {
 			//Otherwise destination has not been yet reached
-			while (distanceLeftGo(x, y) > 1) { // will continuously try and correct position until the distance left is less than 1
-				if (Math.abs(x - odometer.getX()) < BUFFER){      
-				            								
-					if (y < odometer.getY()) // turns robot to 180 if y is less than the y stored in the odometer
-						turnTo(180); 
-					else // turns the robot to 0 if y is greater than the y stored in the odometer
-						turnTo(0); 
+			while (distanceLeft(x, y) > 1) { 
+				// Robot will adjust position until the distance left is less than 1
+				if (Math.abs(x - odometer.getX()) < BUFFER){  
+					//Since our theta is reversed, if y is less than the y stored in the odometer, turn to 90 (90
+					//on a cartesian grid)
+					if (y < odometer.getY()){ 
+						turnTo(90); 
+					}
+					else{ 
+						// Turns the robot to 2700 if y is greater than the y stored in the odometer (360 on cartesian 
+						// grid)
+						turnTo(270);
+					}
 				}
 				if (Math.abs(y - odometer.getY()) < BUFFER){        
-				     										
-					if (x < odometer.getX()) // turns the robot to -90 if x is less than the x stored in the odometer
-						turnTo(-90); 
-					else // turns the robot to 90 if x is greater than the x stored in the odometer
-						turnTo(90); 
+				    // Tur								
+					if (x < odometer.getX()){ 
+						//Turns robot to 0 if x is less than x stored in odometer (360 on cartesian grid)
+						turnTo(0); 
+					}
+					else {
+						// Turns the robot to 360 if x is greater than the x stored in the odometer (0 on cartesian
+						//grid)
+						turnTo(3600); 
+					}
 				}
-				else { //if the x and y errors are greater than .2 than the robot will try to correct its position
-				
-					if (y > odometer.getY()) 
-						turnTo(Math.toDegrees(Math.atan((x - odometer.getX())/(y - odometer.getY()))));					  
-					else if (x < odometer.getX())
+				else { 
+					//If the x and y errors are greater than BUFFER then the robot will try to correct its position
+					//TO DO: Comment and clean up the following code
+					if (y > odometer.getY()) {
+						turnTo(Math.toDegrees(Math.atan((x - odometer.getX())/(y - odometer.getY()))));		
+					}
+					else if (x < odometer.getX()){
 						turnTo((-1)*Math.toDegrees(Math.atan((y - odometer.getY())/(x - odometer.getX()))) - 90);
-					else
+					}
+					else{
 						turnTo((-1)*Math.toDegrees(Math.atan((y - odometer.getY())/(x - odometer.getX()))) + 90);
-				}			
+					}
+				}	
+				//Head in adjusted direction
 				leftMotor.setSpeed(FORWARD_SPEED);
 				rightMotor.setSpeed(FORWARD_SPEED);
 				leftMotor.forward();
@@ -150,28 +158,29 @@ void travelTo(double x, double y) {
 }
 	
 	private void turnTo(double theta) {
-		//Turn to the absolute angle specified
+		//TO DO: Turn to the absolute angle specified
 	
 	}	
 	
-	double distanceLeftGo(double x, double y) { // calculates the remaining distance the robot needed to travel to get to the absolute position
+	double distanceLeft(double x, double y) { 
+		// Calculates the distance left to travel
 		double distanceleft;
 		distanceleft = Math.sqrt(Math.pow((x - odometer.getX()), 2) + Math.pow((y - odometer.getY()), 2)); 
 		return distanceleft;
 	}
 
-	public static boolean isNavigating() { // true if the robot is still correcting its position
+	public static boolean isNavigating() { 
+		// Returns true if the robot is still correcting its position
 		return isNavigating();
 	}
 	
 	//Methods from previous labs
-	private  int convertDistance(double radius, double distance)
-	{ 															 
+	
+	private  int convertDistance(double radius, double distance) { 															 
 		return (int) ((180.0 * distance) / (Math.PI * radius)); 
 	} 
 	      
-	private  int convertAngle(double radius, double width, double angle) 
-	{ 
+	private  int convertAngle(double radius, double width, double angle) { 
 		return convertDistance(radius, Math.PI * width * angle / 360.0); 
 	}
 } 
