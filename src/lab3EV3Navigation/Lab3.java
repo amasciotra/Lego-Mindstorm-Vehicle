@@ -2,6 +2,7 @@ package lab3EV3Navigation;
 
 /*
  * TO DO:
+ *
  * 1. Main thing is the angle situation in Navigation. Making the angles make sense and work out
  * is going to be the hardest part, especially because our odometer angles don't really make sense
  * 2. The turnTo() method could be found in other people's code on GitHub, the only problem is that 
@@ -14,6 +15,8 @@ package lab3EV3Navigation;
  * 				|
  * 				|
  * 				270*
+ * 
+ * Test
  */
 import lab1EV3WallFollower.BangBangController;
 import lab1EV3WallFollower.UltrasonicPoller;
