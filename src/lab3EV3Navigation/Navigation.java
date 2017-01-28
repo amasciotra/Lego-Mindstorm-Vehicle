@@ -7,43 +7,60 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class Navigation extends Thread {
 	//Final variables
-	private static final double WHEEL_RADIUS = 2.07;
-	private static final double TRACK = 18.54;
+	private static double WHEEL_RADIUS;
+	private static double TRACK;
 	private static final double BUFFER = 0.5;
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 150;
+	private static double path[][];
 	
 	//Way points defined in lab (1 correspond to part one, 2 corresonds to part 2)
-	private double[] x1 = {60.0, 30.0, 30.0, 60.0}; 
+	/*private double[] x1 = {60.0, 30.0, 30.0, 60.0}; 
 	private double[] y1 = {30.0, 30.0, 60.0, 0.0}; 
 	private double[] x2 = {0.0, 60.0}; 
-	private double[] y2 = {60.0, 0.0}; 
+	private double[] y2 = {60.0, 0.0}; */
 	
 	EV3LargeRegulatedMotor leftMotor, rightMotor;
 	Odometer odometer;
     OdometryDisplay display;
     BangBangController bangbang;  
     boolean isNavigating, isAvoiding;
-    int usDistance; 
+    int usDistance;
+    
    
     //Variables to hold current and final x and y values
     double x = 0 ; 
 	double y = 0 ;
 	double dX = 0;
 	double dY = 0;
+	
 	 
 	final static TextLCD screen = LocalEV3.get().getTextLCD();
 	float[] sample = new float[1];        
 
-    public Navigation(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, BangBangController bangbang, boolean isAvoiding){   //constructor  	
+    public Navigation(double WHEEL_RADIUS,double TRACK,double[][] path,Odometer odometer,EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, BangBangController bangbang, boolean isAvoiding){   //constructor  	
     	this.rightMotor = rightMotor;
     	this.leftMotor = leftMotor;
     	this.bangbang = bangbang;
     	this.isAvoiding = isAvoiding;
     	this.odometer = new Odometer(leftMotor, rightMotor);
+    	this.path = path;
+    	this.TRACK = TRACK;
+    	this.WHEEL_RADIUS = WHEEL_RADIUS;
+    	
+    	
+    	
         OdometryDisplay display = new OdometryDisplay (odometer, screen);                         
         odometer.start(); 
         display.start(); 
+        
+        //motor stopped on starting
+       //leftMotor.stop();
+       //rightMotor.stop();
+        
+        //leftMotor.setAcceleration(1000);
+        //rightMotor.setAcceleration(1000);
+        
     } 
         
     public void run(){  
@@ -53,7 +70,12 @@ public class Navigation extends Thread {
     		for (int i = 0; i < 4; i++) {
     			isNavigating = true;
     			while(isNavigating){
-    				travelTo(x1[i], y1[i]);
+    				//travelTo(x1[i], y1[i]);
+    				travelTo(60,30);
+    				travelTo(30,30);
+    				travelTo(30,60);
+    				travelTo(60,0);
+    				
     				//Set isNavigating to false once arrived at destination
     			}
     		}
@@ -65,7 +87,9 @@ public class Navigation extends Thread {
 					isAvoiding = true;
 				}
 				while (isNavigating) {
-					travelTo(x2[i],y2[i]);
+					//travelTo(x2[i],y2[i]);
+					travelTo(0,60);
+					travelTo(60,0);
 				}
 			}
     	}
@@ -117,7 +141,7 @@ void travelTo(double x, double y) {
 						turnTo(90); 
 					}
 					else{ 
-						// Turns the robot to 2700 if y is greater than the y stored in the odometer (360 on cartesian 
+						// Turns the robot to 270 if y is greater than the y stored in the odometer (360 on cartesian 
 						// grid)
 						turnTo(270);
 					}
@@ -131,7 +155,7 @@ void travelTo(double x, double y) {
 					else {
 						// Turns the robot to 360 if x is greater than the x stored in the odometer (0 on cartesian
 						//grid)
-						turnTo(3600); 
+						turnTo(360); 
 					}
 				}
 				else { 
@@ -157,8 +181,28 @@ void travelTo(double x, double y) {
 	}
 }
 	
-	private void turnTo(double theta) {
+	private void turnTo(double orientation) {
 		//TO DO: Turn to the absolute angle specified
+		isNavigating=true;
+		double degressWanted = (orientation * 180) / Math.PI;
+		double currentTheta = (odometer.getTheta());
+		double theta = degressWanted - currentTheta;
+		
+		if(theta > Math.PI){ 
+			theta = theta - 2*Math.PI;
+		}
+		else if (theta < -Math.PI){
+			theta = theta + 2*Math.PI;
+			
+		}
+		
+		leftMotor.setSpeed(ROTATE_SPEED);
+		rightMotor.setSpeed(ROTATE_SPEED);
+		
+		
+		
+		
+		
 	
 	}	
 	

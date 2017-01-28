@@ -1,5 +1,18 @@
 package lab3EV3Navigation;
 
+/*ok, i added a turnTo, and tried to fix some things, still have 2 errors im unable to fix.with the code we had,
+ * the robot was not turning at all just driving in a straight line for path 1. for path 2 the bangbang didnt really work
+ * i saw its sharp turn once but after that it doesn't work.
+ * i tried to focus more on the path 1 part of the code. 
+ * i feel the way you wrote the travel to in the array x1 y1 it was not being read properly.
+ * 
+ * you can see all the changes i did on github, feel free to remove anything and keep what you think we need
+ * not the most productive 5 hours ive had in this lab.
+ * 
+ * the next time i can come in is monday as well, willing to spend the night.
+ * 
+ */
+
 /*
  * TO DO:
  *
@@ -33,6 +46,14 @@ public class Lab3 {
 	private static final int BAND_WIDTH= 30;	
 	private static final int MOTOR_LOW = 100;
 	private static final int MOTOR_HIGH = 300;
+	private static Odometer odometer;
+	private static final double pathOne[][] = {{60,30},{30,30},{30,60},{60,60}};
+	private static final double pathTwo[][] = {{0,60},{60,0}};
+	public static final double TRACK = 18.54;
+	public static final double WHEEL_RADIUS = 2.07;
+	private static final TextLCD TextLCD = null;
+	private static Navigation navigation;
+	
 	
 	public static void main(String[] args) {
 		int buttonChoice;
@@ -43,7 +64,7 @@ public class Lab3 {
 		
 		//initializes sensor and prepares it to read the distance
 		@SuppressWarnings("resource")					
-		SensorModes usSensor = new EV3UltrasonicSensor(LocalEV3.get().getPort("S2"));		
+		SensorModes usSensor = new EV3UltrasonicSensor(LocalEV3.get().getPort("S1"));		
 		SampleProvider usDistance = usSensor.getMode("Distance");
 		float[] usData = new float[usDistance.sampleSize()];
 		
@@ -52,6 +73,7 @@ public class Lab3 {
 				BAND_CENTER, BAND_WIDTH, MOTOR_LOW, MOTOR_HIGH);
 		
 		final TextLCD t = LocalEV3.get().getTextLCD();
+		OdometryDisplay display = new OdometryDisplay(odometer, TextLCD);
 		Navigation nav = null;
 		do {
 			//Clear display
@@ -63,13 +85,13 @@ public class Lab3 {
 		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 
 		if (buttonChoice == Button.ID_LEFT) {
-			nav = new Navigation(leftMotor, rightMotor, bangbang, true);
+			nav = new Navigation(pathTwo, odometer,leftMotor, rightMotor, bangbang, true);
 			UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData, bangbang);;
 			nav.start();
 			usPoller.start();
 			
 		} else {
-			nav = new Navigation(leftMotor, rightMotor, bangbang, false);
+			nav = new Navigation(leftMotor, rightMotor, pathOne, bangbang,TRACK,WHEEL_RADIUS, false);
 			nav.start();
 		}
 		
