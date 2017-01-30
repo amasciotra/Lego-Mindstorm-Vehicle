@@ -1,6 +1,5 @@
 package lab3EV3Navigation;
 
-import lab1EV3WallFollower.BangBangController;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -12,13 +11,14 @@ public class Navigation extends Thread {
 	private static final double BUFFER = 0.5;
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 150;
-	private static double path[][];
+	private static int demo;
+	private UltrasonicPoller usPoller;
 	
 	//Way points defined in lab (1 correspond to part one, 2 corresonds to part 2)
-	/*private double[] x1 = {60.0, 30.0, 30.0, 60.0}; 
+	private double[] x1 = {60.0, 30.0, 30.0, 60.0}; 
 	private double[] y1 = {30.0, 30.0, 60.0, 0.0}; 
 	private double[] x2 = {0.0, 60.0}; 
-	private double[] y2 = {60.0, 0.0}; */
+	private double[] y2 = {60.0, 0.0}; 
 	
 	EV3LargeRegulatedMotor leftMotor, rightMotor;
 	Odometer odometer;
@@ -38,58 +38,31 @@ public class Navigation extends Thread {
 	final static TextLCD screen = LocalEV3.get().getTextLCD();
 	float[] sample = new float[1];        
 
-    public Navigation(double WHEEL_RADIUS,double TRACK,double[][] path,Odometer odometer,EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, BangBangController bangbang, boolean isAvoiding){   //constructor  	
-    	this.rightMotor = rightMotor;
-    	this.leftMotor = leftMotor;
-    	this.bangbang = bangbang;
-    	this.isAvoiding = isAvoiding;
-    	this.odometer = new Odometer(leftMotor, rightMotor);
-    	this.path = path;
-    	this.TRACK = TRACK;
-    	this.WHEEL_RADIUS = WHEEL_RADIUS;
-    	
-    	
-    	
-        OdometryDisplay display = new OdometryDisplay (odometer, screen);                         
-        odometer.start(); 
-        display.start(); 
-        
-        //motor stopped on starting
-       //leftMotor.stop();
-       //rightMotor.stop();
-        
-        //leftMotor.setAcceleration(1000);
-        //rightMotor.setAcceleration(1000);
-        
-    } 
+	
+	public Navigation(Odometer odometer, UltrasonicPoller usPoller, BangBangController bangbang){
+		this.odometer = odometer;
+		this.usPoller = usPoller;
+		this.bangbang = bangbang;
+	}
+
         
     public void run(){  
-    	
-    	//Demo Part 1
-    	if(!isAvoiding) {
+    	if(demo == 1){
+    		//Demo Part 1
     		for (int i = 0; i < 4; i++) {
     			isNavigating = true;
+    			//Set isNavigating to false once arrived at destination (inside TravelTo)
     			while(isNavigating){
-    				//travelTo(x1[i], y1[i]);
-    				travelTo(60,30);
-    				travelTo(30,30);
-    				travelTo(30,60);
-    				travelTo(60,0);
-    				
-    				//Set isNavigating to false once arrived at destination
+    				travelTo(x1[i], y1[i]);
     			}
-    		}
-    	}
-    	else {
+   			}
+    	} else if (demo == 2) {
     		for (int i=0; i<2; i++) {	
-				isNavigating = true;
-				if (i == 1) {
-					isAvoiding = true;
-				}
-				while (isNavigating) {
-					//travelTo(x2[i],y2[i]);
-					travelTo(0,60);
-					travelTo(60,0);
+    			isNavigating = true;
+    			if (i == 1) 
+    				isAvoiding = true;
+			while (isNavigating) {
+					travelTo(x2[i],y2[i]);
 				}
 			}
     	}
@@ -216,6 +189,10 @@ void travelTo(double x, double y) {
 	public static boolean isNavigating() { 
 		// Returns true if the robot is still correcting its position
 		return isNavigating();
+	}
+	
+	public void setDemo(int demoNumber){
+		demo = demoNumber;
 	}
 	
 	//Methods from previous labs

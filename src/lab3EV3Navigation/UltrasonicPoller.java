@@ -16,10 +16,9 @@ public class UltrasonicPoller extends Thread{
 	private UltrasonicController cont;
 	private float[] usData;
 	
-	public UltrasonicPoller(SampleProvider us, float[] usData, UltrasonicController cont) {
+	public UltrasonicPoller(SampleProvider us, UltrasonicController cont) {
 		this.us = us;
 		this.cont = cont;
-		this.usData = usData;
 	}
 
 //  Sensors now return floats using a uniform protocol.

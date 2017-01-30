@@ -1,6 +1,17 @@
 package lab3EV3Navigation;
 
+/**
+ * Main class for lab 3. Primary function is allowing the user to select which
+ * part of the demo to run (part 1 or part 2). An instance of the Navigation class
+ * that corresponds to the selection is then initialized.
+ * 
+ * 
+ * @author thomaschristinck
+ * @author alexmasciotra
+ */
+
 /*ok, i added a turnTo, and tried to fix some things, still have 2 errors im unable to fix.with the code we had,
+
  * the robot was not turning at all just driving in a straight line for path 1. for path 2 the bangbang didnt really work
  * i saw its sharp turn once but after that it doesn't work.
  * i tried to focus more on the path 1 part of the code. 
@@ -31,8 +42,7 @@ package lab3EV3Navigation;
  * 
  * Test
  */
-import lab1EV3WallFollower.BangBangController;
-import lab1EV3WallFollower.UltrasonicPoller;
+
 import lejos.hardware.*;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.*;
@@ -46,13 +56,9 @@ public class Lab3 {
 	private static final int BAND_WIDTH= 30;	
 	private static final int MOTOR_LOW = 100;
 	private static final int MOTOR_HIGH = 300;
-	private static Odometer odometer;
-	private static final double pathOne[][] = {{60,30},{30,30},{30,60},{60,60}};
-	private static final double pathTwo[][] = {{0,60},{60,0}};
 	public static final double TRACK = 18.54;
 	public static final double WHEEL_RADIUS = 2.07;
 	private static final TextLCD TextLCD = null;
-	private static Navigation navigation;
 	
 	
 	public static void main(String[] args) {
@@ -61,20 +67,21 @@ public class Lab3 {
 		//initializes both motors
 		EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 		EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D")); 
+		Odometer odometer = new Odometer(leftMotor, rightMotor);
 		
 		//initializes sensor and prepares it to read the distance
 		@SuppressWarnings("resource")					
 		SensorModes usSensor = new EV3UltrasonicSensor(LocalEV3.get().getPort("S1"));		
 		SampleProvider usDistance = usSensor.getMode("Distance");
-		float[] usData = new float[usDistance.sampleSize()];
+		//Initialize bangbang controller
+		BangBangController bangbang = new BangBangController(leftMotor, rightMotor, BAND_CENTER, BAND_WIDTH, MOTOR_LOW, MOTOR_HIGH);
 		
-		//Initialize bang-bang controller
-		BangBangController bangbang = new BangBangController(leftMotor, rightMotor, 
-				BAND_CENTER, BAND_WIDTH, MOTOR_LOW, MOTOR_HIGH);
+		UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, bangbang);
+		Navigation nav = new Navigation(odometer, usPoller, bangbang);
 		
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		OdometryDisplay display = new OdometryDisplay(odometer, TextLCD);
-		Navigation nav = null;
+
 		do {
 			//Clear display
 			t.clear();
@@ -85,13 +92,15 @@ public class Lab3 {
 		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 
 		if (buttonChoice == Button.ID_LEFT) {
-			nav = new Navigation(pathTwo, odometer,leftMotor, rightMotor, bangbang, true);
-			UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData, bangbang);;
+			//UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, bangbang);;
+			
+			nav.setDemo(1);
 			nav.start();
 			usPoller.start();
 			
 		} else {
-			nav = new Navigation(leftMotor, rightMotor, pathOne, bangbang,TRACK,WHEEL_RADIUS, false);
+			
+			nav.setDemo(2);
 			nav.start();
 		}
 		
