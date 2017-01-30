@@ -4,6 +4,7 @@
 package lab3EV3Navigation;
 
 
+import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.*;
 
 public class Odometer extends Thread {

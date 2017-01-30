@@ -20,11 +20,11 @@ public class Navigation extends Thread {
 	private double[] x2 = {0.0, 60.0}; 
 	private double[] y2 = {60.0, 0.0}; 
 	
-	EV3LargeRegulatedMotor leftMotor, rightMotor;
 	Odometer odometer;
     OdometryDisplay display;
     BangBangController bangbang;  
-    boolean isNavigating, isAvoiding;
+    boolean isNavigating;
+    boolean isAvoiding;
     int usDistance;
     
    
@@ -33,13 +33,13 @@ public class Navigation extends Thread {
 	double y = 0 ;
 	double dX = 0;
 	double dY = 0;
+	private EV3LargeRegulatedMotor leftMotor, rightMotor;
+ 
+	final static TextLCD screen = LocalEV3.get().getTextLCD();   
 	
-	 
-	final static TextLCD screen = LocalEV3.get().getTextLCD();
-	float[] sample = new float[1];        
-
-	
-	public Navigation(Odometer odometer, UltrasonicPoller usPoller, BangBangController bangbang){
+	public Navigation(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor, Odometer odometer, UltrasonicPoller usPoller, BangBangController bangbang){
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
 		this.odometer = odometer;
 		this.usPoller = usPoller;
 		this.bangbang = bangbang;
@@ -149,6 +149,13 @@ void travelTo(double x, double y) {
 				rightMotor.setSpeed(FORWARD_SPEED);
 				leftMotor.forward();
 				rightMotor.forward();
+	
+				//Sleep 100 ms 
+				try {
+					Thread.sleep(100); 
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -166,17 +173,10 @@ void travelTo(double x, double y) {
 		}
 		else if (theta < -Math.PI){
 			theta = theta + 2*Math.PI;
-			
 		}
-		
+		//error 1
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
-		
-		
-		
-		
-		
-	
 	}	
 	
 	double distanceLeft(double x, double y) { 
