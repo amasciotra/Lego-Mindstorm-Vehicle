@@ -106,6 +106,9 @@ void travelTo(double x, double y) {
 	leftMotor.stop(true);
 	rightMotor.stop(true);
 	if(isAvoiding == true){
+		/*
+		 * LEAVE HERE FOR NOW
+		 */
 		bangbang.turnON();
 		try {
 			//Give the robot specified time to avoid obstacle
@@ -152,7 +155,7 @@ void travelTo(double x, double y) {
 	
 	private boolean isNavigating(){
 		//Check if obstacle is present
-		if( usPoller.getDistance() < 10 && demo == 2){
+		if(usPoller.getDistance() < 10 && demo == 2){
 			isAvoiding = true;
 			return false;
 		}

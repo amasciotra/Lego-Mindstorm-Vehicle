@@ -1,7 +1,5 @@
-/*
- * Odometer.java
- */
 package lab3EV3Navigation;
+//ODOMETER
 
 
 import lejos.hardware.ev3.LocalEV3;
@@ -36,16 +34,16 @@ public class Odometer extends Thread {
 	}
 
 	//Theta correction(corrects negative angles)
-		public double thetaCorrection(double radians){
-			double omega = radians;
-			if(omega < 0){
-				omega = (TWO_PI) + omega;
-			}
-			else if(omega >= (TWO_PI)){
-				omega = omega % (TWO_PI);
-			}
-			return omega;
+	public double thetaCorrection(double radians){
+		double omega = radians;
+		if(omega < 0){
+			omega = (TWO_PI) + omega;
 		}
+		else if(omega >= (TWO_PI)){
+			omega = omega % (TWO_PI);
+		}
+		return omega;
+	}
 		
 	// run method (required for Thread)
 	public void run() {
