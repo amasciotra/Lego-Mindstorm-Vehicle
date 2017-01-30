@@ -12,19 +12,12 @@ public class BangBangController implements UltrasonicController{
 	private int FILTER_OUT = 20;
 	private boolean ON = false;
 
-	public BangBangController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
-							  int bandCenter, int bandwidth, int motorLow, int motorHigh) {
+	public BangBangController(int bandCenter, int bandwidth, int motorLow, int motorHigh) {
 		//Default Constructor
 		this.bandCenter = bandCenter;
 		this.bandwidth = bandwidth;
 		this.motorLow = motorLow;
 		this.motorHigh = motorHigh;
-		this.leftMotor = leftMotor;
-		this.rightMotor = rightMotor;
-		leftMotor.setSpeed(motorLow);				// Start robot moving forward
-		rightMotor.setSpeed(motorLow);
-		leftMotor.forward();
-		rightMotor.forward();
 	}
 
 	@Override

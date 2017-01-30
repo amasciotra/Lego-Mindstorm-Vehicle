@@ -2,8 +2,8 @@ package lab3EV3Navigation;
 
 /**
  * Main class for lab 3. Primary function is allowing the user to select which
- * part of the demo to run (part 1 or part 2). An instance of the Navigation class
- * that corresponds to the selection is then initialized.
+ * part of the demo to run (part 1 or part 2). The demo field in the Navigation class
+ * is then correspondingly set to 1 or 2.
  * 
  * 
  * @author thomaschristinck
@@ -58,52 +58,52 @@ public class Lab3 {
 	private static final int MOTOR_HIGH = 300;
 	public static final double TRACK = 18.54;
 	public static final double WHEEL_RADIUS = 2.07;
-	private static final TextLCD TextLCD = null;
-	
 	
 	public static void main(String[] args) {
 		int buttonChoice;
-
-		//initializes both motors
-		EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-		EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D")); 
-		Odometer odometer = new Odometer(leftMotor, rightMotor);
 		
+		//Initialize motors
+		final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
+		final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+		//Initialize odometer
+		Odometer odometer = new Odometer(leftMotor, rightMotor);
 		//initializes sensor and prepares it to read the distance
 		@SuppressWarnings("resource")					
 		SensorModes usSensor = new EV3UltrasonicSensor(LocalEV3.get().getPort("S1"));		
 		SampleProvider usDistance = usSensor.getMode("Distance");
 		//Initialize bangbang controller
-		BangBangController bangbang = new BangBangController(leftMotor, rightMotor, BAND_CENTER, BAND_WIDTH, MOTOR_LOW, MOTOR_HIGH);
+		BangBangController bangbang = new BangBangController(BAND_CENTER, BAND_WIDTH, MOTOR_LOW, MOTOR_HIGH);
+		float[] usData = new float[usDistance.sampleSize()];
 		
-		UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, bangbang);
-		Navigation nav = new Navigation(odometer, usPoller, bangbang);
+		UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData, bangbang);
+		Navigation nav = new Navigation(leftMotor, rightMotor, odometer, usPoller, bangbang);
 		
 		final TextLCD t = LocalEV3.get().getTextLCD();
-		OdometryDisplay display = new OdometryDisplay(odometer, TextLCD);
-
+		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t);
+		
 		do {
 			//Clear display
 			t.clear();
 			
 			//Ask user which part of lab to execute; part 1 or part 2
-			LCD.drawString("Part 2 | Part 1  ", 0, 4);
+			LCD.drawString("Part 1 | Part 2  ", 0, 4);
 			buttonChoice = Button.waitForAnyPress();
 		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 
 		if (buttonChoice == Button.ID_LEFT) {
-			//UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, bangbang);;
-			
 			nav.setDemo(1);
 			nav.start();
 			usPoller.start();
-			
+			odometer.start();
+			odometryDisplay.start();
 		} else {
-			
 			nav.setDemo(2);
 			nav.start();
+			usPoller.start();
+			odometer.start();
+			odometryDisplay.start();
+			//Put motor rotatation code here
 		}
-		
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
 	}
