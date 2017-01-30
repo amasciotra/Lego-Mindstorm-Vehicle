@@ -57,6 +57,8 @@ public class Odometer extends Thread {
 	    x = 0;
 	    y = 0;
 	    theta =  Math.PI / 2;
+	    //theta = 0;
+	    
 	    
 		while (true) {
 			updateStart = System.currentTimeMillis();

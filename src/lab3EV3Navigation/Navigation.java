@@ -6,8 +6,8 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class Navigation extends Thread {
 	//Final variables
-	private static double WHEEL_RADIUS;
-	private static double TRACK;
+	//private static double WHEEL_RADIUS;
+	//private static double TRACK;
 	private static final double BUFFER = 2.5;
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 150;
@@ -16,8 +16,12 @@ public class Navigation extends Thread {
 	private double destX;
 	private double destY;
 	private final Object lock;
+	private double radius;
+	private double width;	
 	
-	Odometer odometer;
+
+
+	private Odometer odometer;
     OdometryDisplay display;
     BangBangController bangbang;  
     boolean isNavigating;
@@ -34,13 +38,19 @@ public class Navigation extends Thread {
  
 	final static TextLCD screen = LocalEV3.get().getTextLCD();   
 	
-	public Navigation(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor, Odometer odometer, UltrasonicPoller usPoller, BangBangController bangbang){
+	public Navigation(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor, Odometer odometer, UltrasonicPoller usPoller, BangBangController bangbang,double radius, double width){
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.odometer = odometer;
 		this.usPoller = usPoller;
 		this.bangbang = bangbang;
+		this.radius = radius;
+		this.width = width;
+				
 		lock = new Object();
+		destX=0;
+		destY=0;
+		
 		
 		// Reset motors
 		for(EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] { leftMotor, rightMotor }){
@@ -90,9 +100,9 @@ void travelTo(double x, double y) {
 	
 	double destTheta = arctan((y - oldY),(x - oldX));
 	synchronized(lock){
-		double dTheta = ((Math.PI / 2) - destTheta - oldTheta);
+		double dTheta = (((Math.PI / 2) - destTheta - oldTheta));
 		dTheta = angleWrap(dTheta);
-		turnTo(dTheta);
+		turnTo((dTheta));
 	}
 	leftMotor.setSpeed(FORWARD_SPEED);
 	rightMotor.setSpeed(FORWARD_SPEED);
@@ -125,11 +135,14 @@ void travelTo(double x, double y) {
 		isNavigating = true;
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
-		leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta), true);
-		rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta), false);
-		
-	}	
+		//leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta), true);
+		//rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta), false);
+		leftMotor.rotate(convertAngle(radius, width, theta), true);
+		rightMotor.rotate(-convertAngle(radius, width, theta), false);
+	}
+
 	
+
 	double distanceLeft(double x, double y) { 
 		// Calculates the distance left to travel
 		double distanceleft;
@@ -177,14 +190,17 @@ void travelTo(double x, double y) {
 		else if(angle < -Math.PI)
 			return angle + 1.5 * Math.PI;
 		else 
-			return angle - 0.5 * Math.PI;
+			return angle;
+			//return angle - 0.5 * Math.PI;
 	}
 	
+	private  int convertAngle(double radius, double width, double angle) { 
+		return (int)((angle*width*90)/(Math.PI*radius));
+		//return convertDistance(radius, Math.PI * width * angle / 360.0); 
+	}
 	private  int convertDistance(double radius, double distance) { 															 
 		return (int) ((180.0 * distance) / (Math.PI * radius)); 
 	} 
 	      
-	private  int convertAngle(double radius, double width, double angle) { 
-		return convertDistance(radius, Math.PI * width * angle / 360.0); 
-	}
+	
 } 

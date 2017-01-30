@@ -96,7 +96,7 @@ public class Odometer extends Thread {
 				y += deltaY;
 				theta += deltaTheta;
 				theta = theta % TWO_PI;
-				theta = thetaCorrection(theta + deltaTheta);
+				//theta = thetaCorrection(theta + deltaTheta);
 			}
 
 			// this ensures that the odometer only runs once every period
@@ -121,7 +121,25 @@ public class Odometer extends Thread {
 				position[0] = x;
 			if (update[1])
 				position[1] = y;
+			/*if (update[2]){
+				double thetaDegree = Math.toDegrees(theta); // To show the
+				// displayed angle
+				// in degrees
+				while (thetaDegree > 180.0) // Restrict the angle value between 0 and 360
+				{
+					thetaDegree -= 360.0;
+				} 
+				while (thetaDegree < -180.0) 
+				{
+					thetaDegree += 360.0;
+				}
+				position[2] = thetaDegree;
+			}
+		}
+	}*/
 			if (update[2])
+				
+			
 				//Convert angle sent to odometer to degrees
 				position[2] = (theta * 360 / TWO_PI);
 		}

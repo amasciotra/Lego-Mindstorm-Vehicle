@@ -51,17 +51,18 @@ import lejos.hardware.sensor.*;
 import lejos.robotics.*;
 
 public class Lab3 {
-	//Final variables for bang-bang control
+	//Final variables for bang-bang control`
 	private static final int BAND_CENTER = 30;
 	private static final int BAND_WIDTH= 30;	
 	private static final int MOTOR_LOW = 100;
 	private static final int MOTOR_HIGH = 300;
 	public static final double TRACK = 18.54;
 	public static final double WHEEL_RADIUS = 2.07;
-	
+
 	public static void main(String[] args) {
 		int buttonChoice;
 		
+
 		//Initialize motors
 		final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 		final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
@@ -76,7 +77,7 @@ public class Lab3 {
 		float[] usData = new float[usDistance.sampleSize()];
 		
 		UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData, bangbang);
-		Navigation nav = new Navigation(leftMotor, rightMotor, odometer, usPoller, bangbang);
+		Navigation nav = new Navigation(leftMotor, rightMotor, odometer, usPoller, bangbang, WHEEL_RADIUS, TRACK);
 		
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t);
@@ -95,12 +96,17 @@ public class Lab3 {
 		if (buttonChoice == Button.ID_LEFT) {
 			nav.setDemo(1);
 			nav.start();
+			
 		} else {
 			nav.setDemo(2);
 			usPoller.start();
 			nav.start();
 		}
+			
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
 	}
 }
+	
+	
+
