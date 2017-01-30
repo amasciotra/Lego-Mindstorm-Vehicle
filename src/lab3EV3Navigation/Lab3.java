@@ -89,20 +89,16 @@ public class Lab3 {
 			LCD.drawString("Part 1 | Part 2  ", 0, 4);
 			buttonChoice = Button.waitForAnyPress();
 		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-
+		odometer.start();
+		odometryDisplay.start();
+			
 		if (buttonChoice == Button.ID_LEFT) {
 			nav.setDemo(1);
 			nav.start();
-			usPoller.start();
-			odometer.start();
-			odometryDisplay.start();
 		} else {
 			nav.setDemo(2);
-			nav.start();
 			usPoller.start();
-			odometer.start();
-			odometryDisplay.start();
-			//Put motor rotatation code here
+			nav.start();
 		}
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
