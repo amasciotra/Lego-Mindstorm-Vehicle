@@ -39,7 +39,7 @@ public class Odometer extends Thread {
 		public double thetaCorrection(double radians){
 			double omega = radians;
 			if(omega < 0){
-				omega =(TWO_PI) + omega;
+				omega = (TWO_PI) + omega;
 			}
 			else if(omega >= (TWO_PI)){
 				omega = omega % (TWO_PI);
@@ -62,8 +62,6 @@ public class Odometer extends Thread {
 	    
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			
-			
 			//Find the current phi and rho by converting tacho count of each 
 			//motor to radians (rpm to rads)
 			phi = Math.toRadians(leftMotor.getTachoCount());
@@ -152,7 +150,7 @@ public class Odometer extends Thread {
 		double result;
 
 		synchronized (lock) {
-			result = theta;
+			result =  theta ;
 		}
 
 		return result;
