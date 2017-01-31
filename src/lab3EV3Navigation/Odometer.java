@@ -8,26 +8,30 @@ public class Odometer extends Thread {
 	private double x, y, theta;
 	//Relevant tachometer readings in rads
 	private double phi, rho, oldPhi, oldRho;
-	private int leftMotorTachoCount, rightMotorTachoCount;
+	private int oldleftMotorTachoCount, oldrightMotorTachoCount, newleftMotorTachoCount, newrightMotorTachoCount;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
-	private static final double WHEEL_RADIUS = 1.97;//2.07
+	private static final double WHEEL_RADIUS = 2.07;//2.07
 	private static final double WHEELBASE_WIDTH = 18.6;//real 18.6
 	private static final double TWO_PI = 2 * Math.PI;
+	private double radius;
+	private double width;
 	
 	// Lock object for mutual exclusion
 	private Object lock;
 
 	// Default constructor
-	public Odometer(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor) {
+	public Odometer(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor, double radius, double width) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.x = 0.0;
 		this.y = 0.0;
 		this.theta = 0.0;
-		this.leftMotorTachoCount = 0;
-		this.rightMotorTachoCount = 0;
+		//this.oldleftMotorTachoCount = 0;
+		//this.oldrightMotorTachoCount = 0;
+		this.radius = radius;
+		this.width = width;
 		lock = new Object();
 	}
 
@@ -55,6 +59,11 @@ public class Odometer extends Thread {
 	    x = 0;
 	    y = 0;
 	    theta = 0;
+	    oldleftMotorTachoCount = newleftMotorTachoCount;
+	    oldrightMotorTachoCount = newrightMotorTachoCount;
+	    
+	    		
+	    
 	    
 	    
 		while (true) {
@@ -76,8 +85,10 @@ public class Odometer extends Thread {
 			//Compute delta theta (robot position)
 			double deltaTheta = (deltaPhiArc - deltaRhoArc) / WHEELBASE_WIDTH;
 			//Find delta x and delta y (y is forward, x is right)
-			double deltaX = deltaAvg * Math.sin(theta + (deltaTheta / 2));
-			double deltaY = deltaAvg * Math.cos(theta + (deltaTheta / 2));
+			//double deltaX = deltaAvg * Math.sin(theta + (deltaTheta / 2));
+			//double deltaY = deltaAvg * Math.cos(theta + (deltaTheta / 2));
+			double deltaX = deltaAvg * Math.sin(theta);
+			double deltaY = deltaAvg * Math.cos(theta);
 			
 			synchronized (lock) {
 				/**
@@ -186,7 +197,7 @@ public class Odometer extends Thread {
 	 * @return the leftMotorTachoCount
 	 */
 	public int getLeftMotorTachoCount() {
-		return leftMotorTachoCount;
+		return oldleftMotorTachoCount;
 	}
 
 	/**
@@ -194,7 +205,7 @@ public class Odometer extends Thread {
 	 */
 	public void setLeftMotorTachoCount(int leftMotorTachoCount) {
 		synchronized (lock) {
-			this.leftMotorTachoCount = leftMotorTachoCount;	
+			this.oldleftMotorTachoCount = leftMotorTachoCount;	
 		}
 	}
 
@@ -202,7 +213,7 @@ public class Odometer extends Thread {
 	 * @return the rightMotorTachoCount
 	 */
 	public int getRightMotorTachoCount() {
-		return rightMotorTachoCount;
+		return oldrightMotorTachoCount;
 	}
 
 	/**
@@ -210,7 +221,7 @@ public class Odometer extends Thread {
 	 */
 	public void setRightMotorTachoCount(int rightMotorTachoCount) {
 		synchronized (lock) {
-			this.rightMotorTachoCount = rightMotorTachoCount;	
+			this.oldrightMotorTachoCount = rightMotorTachoCount;	
 		}
 	}
 }
