@@ -14,8 +14,8 @@ public class Odometer extends Thread {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
-	private static final double WHEEL_RADIUS = 2.07;
-	private static final double WHEELBASE_WIDTH = 18.54;//real 18.6
+	private static final double WHEEL_RADIUS = 2.0;//2.07
+	private static final double WHEELBASE_WIDTH = 18.6;//real 18.6
 	private static final double TWO_PI = 2 * Math.PI;
 	
 	// Lock object for mutual exclusion
@@ -56,8 +56,8 @@ public class Odometer extends Thread {
 	    // Set starting position
 	    x = 0;
 	    y = 0;
-	    theta =  Math.PI / 2;
-	    //theta = 0;
+	    //theta =  Math.PI / 2;
+	    theta = 0;
 	    
 	    
 		while (true) {
@@ -79,8 +79,8 @@ public class Odometer extends Thread {
 			//Compute delta theta (robot position)
 			double deltaTheta = (deltaPhiArc - deltaRhoArc) / WHEELBASE_WIDTH;
 			//Find delta x and delta y (y is forward, x is right)
-			double deltaX = -1 * deltaAvg * Math.cos(theta + (deltaTheta / 2));
-			double deltaY = deltaAvg * Math.sin(theta + (deltaTheta / 2));
+			double deltaX = deltaAvg * Math.sin(theta + (deltaTheta / 2));
+			double deltaY = deltaAvg * Math.cos(theta + (deltaTheta / 2));
 			
 			synchronized (lock) {
 				/**
@@ -93,8 +93,8 @@ public class Odometer extends Thread {
 				//Update x, y and theta
 				x += deltaX;
 				y += deltaY;
-				theta += deltaTheta;
-				theta = theta % TWO_PI;
+				//theta += deltaTheta;
+				//theta = theta % TWO_PI;
 				theta = thetaCorrection(theta + deltaTheta);
 			}
 

@@ -56,8 +56,8 @@ public class Lab3 {
 	private static final int BAND_WIDTH= 30;	
 	private static final int MOTOR_LOW = 100;
 	private static final int MOTOR_HIGH = 300;
-	public static final double TRACK = 18.54;
-	public static final double WHEEL_RADIUS = 2.07;
+	public static final double TRACK = 18.60;//18.54
+	public static final double WHEEL_RADIUS = 2.0;//2.07
 
 	public static void main(String[] args) {
 		int buttonChoice;

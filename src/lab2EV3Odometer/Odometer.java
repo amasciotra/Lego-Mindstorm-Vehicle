@@ -57,7 +57,8 @@ public class Odometer extends Thread {
 	    // Set starting position
 	    x = 0;
 	    y = 0;
-	    theta =  Math.PI / 2;
+	    theta=0;
+	    //theta =  Math.PI / 2;
 	    
 		while (true) {
 			updateStart = System.currentTimeMillis();
@@ -94,9 +95,9 @@ public class Odometer extends Thread {
 				//Update x, y and theta
 				x += deltaX;
 				y += deltaY;
-				theta += deltaTheta;
-				theta = theta % TWO_PI;
-				//theta = thetaCorrection(theta + deltaTheta);
+				//theta += deltaTheta;
+				//theta = theta % TWO_PI;
+				theta = thetaCorrection(theta + deltaTheta);
 			}
 
 			// this ensures that the odometer only runs once every period
@@ -121,6 +122,23 @@ public class Odometer extends Thread {
 				position[0] = x;
 			if (update[1])
 				position[1] = y;
+			if (update[2])
+				
+				//Convert angle sent to odometer to degrees
+				position[2] = (theta * 360 / TWO_PI);
+		}
+	}
+	
+	
+	/*if(theta > Math.PI){ 
+		theta = theta - 2*Math.PI;
+	}
+	else if (theta < -Math.PI){
+		theta = theta + 2*Math.PI;
+		
+	}
+
+			
 			/*if (update[2]){
 				double thetaDegree = Math.toDegrees(theta); // To show the
 				// displayed angle
@@ -137,13 +155,7 @@ public class Odometer extends Thread {
 			}
 		}
 	}*/
-			if (update[2])
-				
 			
-				//Convert angle sent to odometer to degrees
-				position[2] = (theta * 360 / TWO_PI);
-		}
-	}
 
 	public double getX() {
 		double result;

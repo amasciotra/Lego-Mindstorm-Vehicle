@@ -1,5 +1,6 @@
 package lab3EV3Navigation;
 
+import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -8,9 +9,9 @@ public class Navigation extends Thread {
 	//Final variables
 	//private static double WHEEL_RADIUS;
 	//private static double TRACK;
-	private static final double BUFFER = 2.5;
-	private static final int FORWARD_SPEED = 200;
-	private static final int ROTATE_SPEED = 150;
+	private static final double BUFFER = 8;
+	private static final int FORWARD_SPEED = 225;
+	private static final int ROTATE_SPEED = 125;
 	private static int demo;
 	private UltrasonicPoller usPoller;
 	private double destX;
@@ -18,6 +19,7 @@ public class Navigation extends Thread {
 	private final Object lock;
 	private double radius;
 	private double width;	
+	
 	
 
 
@@ -55,7 +57,7 @@ public class Navigation extends Thread {
 		// Reset motors
 		for(EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] { leftMotor, rightMotor }){
 			motor.stop();
-			motor.setAcceleration(3000); 
+			motor.setAcceleration(1500); 
 		}
 	}
 
@@ -63,7 +65,7 @@ public class Navigation extends Thread {
     public void run(){ 
     	try {
     		//Wait before next navigation
-			Thread.sleep(1500); 
+			Thread.sleep(2000); 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -75,6 +77,7 @@ public class Navigation extends Thread {
 			travelTo(30,60);
 			travelTo(60,0);
    		} else if (demo == 2) {
+   			
    			while(isAvoiding){
    				//First way point defined in lab
    				travelTo(0, 60);
@@ -84,7 +87,15 @@ public class Navigation extends Thread {
    				travelTo(60, 0);
    			}
     	}
-    } 
+    }
+    
+   /* do{ alternate option since robot isnt moving for part 2
+			travelTo(0,60);
+		}while (isAvoiding==true);
+			do{
+				travelTo(60,0);
+			}while(isAvoiding==true);
+		}*/
  
 private void setDest(double x, double y){
 	this.destX = x;
@@ -113,6 +124,7 @@ void travelTo(double x, double y) {
 	while(isNavigating()){
 		//Do nothing
 	}
+	//something needs to be added here to put the motors in motion for part 2
 	leftMotor.stop(true);
 	rightMotor.stop(true);
 	if(isAvoiding == true){
@@ -174,7 +186,8 @@ void travelTo(double x, double y) {
 		}
 		
 		//if destination reached, stop moving, no obstacle need to be crossed
-		if(Math.abs(odometer.getX() - destX) < BUFFER && Math.abs(odometer.getY() - destY) < BUFFER ){
+		if(Math.abs(odometer.getX() - destX) <= BUFFER && Math.abs(odometer.getY() - destY) <= BUFFER ){
+			Sound.beep();//just putting this here temporary to know when we hit the location
 			isAvoiding = false;
 			return false;	
 		}
@@ -186,9 +199,9 @@ void travelTo(double x, double y) {
 	//Methods from previous labs
 	private double angleWrap(double angle){
 		if (angle > Math.PI)
-			return angle - 2.5 * Math.PI;
+			return (angle - 2 * Math.PI);
 		else if(angle < -Math.PI)
-			return angle + 1.5 * Math.PI;
+			return angle + 2 * Math.PI;
 		else 
 			return angle;
 			//return angle - 0.5 * Math.PI;
