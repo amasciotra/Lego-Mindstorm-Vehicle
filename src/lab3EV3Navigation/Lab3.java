@@ -57,7 +57,7 @@ public class Lab3 {
 	private static final int MOTOR_LOW = 100;
 	private static final int MOTOR_HIGH = 300;
 	public static final double TRACK = 18.60;//18.54
-	public static final double WHEEL_RADIUS = 1.97;//2.07
+	public static final double WHEEL_RADIUS = 2.07;//2.07
 
 	public static void main(String[] args) {
 		int buttonChoice;
@@ -67,7 +67,7 @@ public class Lab3 {
 		final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 		final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 		//Initialize odometer
-		Odometer odometer = new Odometer(leftMotor, rightMotor);
+		Odometer odometer = new Odometer(leftMotor, rightMotor, WHEEL_RADIUS, TRACK);
 		//initializes sensor and prepares it to read the distance
 		@SuppressWarnings("resource")					
 		SensorModes usSensor = new EV3UltrasonicSensor(LocalEV3.get().getPort("S1"));		

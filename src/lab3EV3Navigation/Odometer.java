@@ -12,15 +12,17 @@ public class Odometer extends Thread {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
-	private static final double WHEEL_RADIUS = 1.97;//2.07
-	private static final double WHEELBASE_WIDTH = 18.6;//real 18.6
+	//private static final double WHEEL_RADIUS = 2.07;//2.07
+	//private static final double WHEELBASE_WIDTH = 18.6;//real 18.6
 	private static final double TWO_PI = 2 * Math.PI;
+	private double radius;
+	private double width;
 	
 	// Lock object for mutual exclusion
 	private Object lock;
 
 	// Default constructor
-	public Odometer(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor) {
+	public Odometer(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor, double radius, double width) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.x = 0.0;
@@ -28,6 +30,8 @@ public class Odometer extends Thread {
 		this.theta = 0.0;
 		this.leftMotorTachoCount = 0;
 		this.rightMotorTachoCount = 0;
+		this.radius = radius;
+		this.width = width;
 		lock = new Object();
 	}
 
@@ -55,29 +59,43 @@ public class Odometer extends Thread {
 	    x = 0;
 	    y = 0;
 	    theta = 0;
-	    
-	    
+	   oldPhi = leftMotor.getTachoCount();
+	   oldRho = rightMotor.getTachoCount();
+	   
+	    		
+	     
 		while (true) {
 			updateStart = System.currentTimeMillis();
 			//Find the current phi and rho by converting tacho count of each 
 			//motor to radians (rpm to rads)
 			phi = Math.toRadians(leftMotor.getTachoCount());
 			rho = Math.toRadians(rightMotor.getTachoCount());
-			//Compute the difference from previous values
-			double deltaPhi = phi - oldPhi;
-			double deltaRho = rho - oldRho;
+			
+			//Left and right displacements
+			double leftDist = Math.PI * radius * (phi-oldPhi);
+			double rightDist= Math.PI * radius * (rho-oldRho);
 			oldPhi = phi;
 			oldRho = rho;
+			
+			//Compute the difference from previous values
+			//double deltaPhi = phi - oldPhi;
+			//double deltaRho = rho - oldRho;
+		
 			//Scale delta angle by the wheel radius
-			double deltaPhiArc = WHEEL_RADIUS * deltaPhi;
-			double deltaRhoArc = WHEEL_RADIUS * deltaRho;
+			//double deltaPhiArc = WHEEL_RADIUS * deltaPhi;
+			//double deltaRhoArc = WHEEL_RADIUS * deltaRho;
 			//Compute average delta 
-			double deltaAvg = deltaRhoArc + deltaPhiArc / 2;
+			//double deltaAvg = deltaRhoArc + deltaPhiArc / 2;
+			double deltaAvgDist = (leftDist + rightDist) / 2;
 			//Compute delta theta (robot position)
-			double deltaTheta = (deltaPhiArc - deltaRhoArc) / WHEELBASE_WIDTH;
+			double deltaTheta = (leftDist - rightDist) / width;
 			//Find delta x and delta y (y is forward, x is right)
-			double deltaX = deltaAvg * Math.sin(theta + (deltaTheta / 2));
-			double deltaY = deltaAvg * Math.cos(theta + (deltaTheta / 2));
+			//double deltaX = deltaAvg * Math.sin(theta + (deltaTheta / 2));
+			//double deltaY = deltaAvg * Math.cos(theta + (deltaTheta / 2));
+			theta += deltaTheta;
+			double deltaX = deltaAvgDist * Math.sin(theta);
+			double deltaY = deltaAvgDist * Math.cos(theta);
+			
 			
 			synchronized (lock) {
 				/**
