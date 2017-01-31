@@ -167,8 +167,8 @@ void travelTo(double x, double y) {
 	//Returns arc-tangent within appropriate range(-pi, pi)
 	private double arctan(double y,double x){
 		double result = Math.atan(y/x);
-		if(x < 0){
-			if(y > 0)
+		if(x<0){
+			if(y>0)
 				result += Math.PI;
 			else
 				result -= Math.PI;

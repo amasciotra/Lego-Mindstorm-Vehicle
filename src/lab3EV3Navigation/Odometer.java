@@ -56,8 +56,6 @@ public class Odometer extends Thread {
 	    y = 0;
 	    theta = 0;
 	    
-	    oldPhi = Math.toRadians(leftMotor.getTachoCount());
-		oldRho = Math.toRadians(rightMotor.getTachoCount());
 	    
 		while (true) {
 			updateStart = System.currentTimeMillis();
@@ -65,17 +63,11 @@ public class Odometer extends Thread {
 			//motor to radians (rpm to rads)
 			phi = Math.toRadians(leftMotor.getTachoCount());
 			rho = Math.toRadians(rightMotor.getTachoCount());
-			
-			double leftDist = Math.PI * WHEEL_RADIUS * (phi - oldPhi) / 180;
-			double rightDist = Math.PI * WHEEL_RADIUS * (phi - oldPhi) / 180;
-			
-; 			//Compute the difference from previous values
+			//Compute the difference from previous values
 			double deltaPhi = phi - oldPhi;
 			double deltaRho = rho - oldRho;
 			oldPhi = phi;
 			oldRho = rho;
-			//Change in displacement
-			deltaDist;
 			//Scale delta angle by the wheel radius
 			double deltaPhiArc = WHEEL_RADIUS * deltaPhi;
 			double deltaRhoArc = WHEEL_RADIUS * deltaRho;
