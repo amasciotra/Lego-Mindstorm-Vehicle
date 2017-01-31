@@ -1,8 +1,6 @@
 package lab3EV3Navigation;
 //ODOMETER
 
-
-import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.*;
 
 public class Odometer extends Thread {
@@ -14,7 +12,7 @@ public class Odometer extends Thread {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
-	private static final double WHEEL_RADIUS = 2.0;//2.07
+	private static final double WHEEL_RADIUS = 1.97;//2.07
 	private static final double WHEELBASE_WIDTH = 18.6;//real 18.6
 	private static final double TWO_PI = 2 * Math.PI;
 	
@@ -56,7 +54,6 @@ public class Odometer extends Thread {
 	    // Set starting position
 	    x = 0;
 	    y = 0;
-	    //theta =  Math.PI / 2;
 	    theta = 0;
 	    
 	    
@@ -93,8 +90,6 @@ public class Odometer extends Thread {
 				//Update x, y and theta
 				x += deltaX;
 				y += deltaY;
-				//theta += deltaTheta;
-				//theta = theta % TWO_PI;
 				theta = thetaCorrection(theta + deltaTheta);
 			}
 

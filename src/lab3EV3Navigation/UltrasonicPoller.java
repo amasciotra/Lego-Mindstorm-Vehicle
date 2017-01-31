@@ -14,13 +14,11 @@ import lejos.robotics.SampleProvider;
 public class UltrasonicPoller extends Thread{
 	private int distance;
 	private SampleProvider us;
-	private UltrasonicController cont;
 	private float[] usData;
 	private Object lock = new Object();
 	
-	public UltrasonicPoller(SampleProvider us, float usData[], UltrasonicController cont) {
-		this.us = us;
-		this.cont = cont;
+	public UltrasonicPoller(SampleProvider us, float usData[]) {
+		this.us = us; 
 		this.usData = usData;
 	}
 
@@ -30,8 +28,7 @@ public class UltrasonicPoller extends Thread{
 	public void run() {
 		while (true) {
 			us.fetchSample(usData,0);							// acquire data
-			distance=(int)(usData[0]*100.0);					// extract from buffer, cast to int
-			cont.processUSData(distance);						// now take action depending on value
+			distance=(int)(usData[0]*100.0);					// extract from buffer, cast to int												// now take action depending on value
 			try { 
 				Thread.sleep(50); 
 			} catch(Exception e){

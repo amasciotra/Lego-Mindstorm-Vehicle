@@ -57,7 +57,7 @@ public class Lab3 {
 	private static final int MOTOR_LOW = 100;
 	private static final int MOTOR_HIGH = 300;
 	public static final double TRACK = 18.60;//18.54
-	public static final double WHEEL_RADIUS = 2.0;//2.07
+	public static final double WHEEL_RADIUS = 1.97;//2.07
 
 	public static void main(String[] args) {
 		int buttonChoice;
@@ -76,7 +76,7 @@ public class Lab3 {
 		BangBangController bangbang = new BangBangController(BAND_CENTER, BAND_WIDTH, MOTOR_LOW, MOTOR_HIGH);
 		float[] usData = new float[usDistance.sampleSize()];
 		
-		UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData, bangbang);
+		UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData);
 		Navigation nav = new Navigation(leftMotor, rightMotor, odometer, usPoller, bangbang, WHEEL_RADIUS, TRACK);
 		
 		final TextLCD t = LocalEV3.get().getTextLCD();

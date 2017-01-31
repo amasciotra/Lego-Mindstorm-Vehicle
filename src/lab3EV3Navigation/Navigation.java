@@ -9,7 +9,7 @@ public class Navigation extends Thread {
 	//Final variables
 	//private static double WHEEL_RADIUS;
 	//private static double TRACK;
-	private static final double BUFFER = 8;
+	private static final double BUFFER = 5;
 	private static final int FORWARD_SPEED = 225;
 	private static final int ROTATE_SPEED = 125;
 	private static int demo;
@@ -19,9 +19,6 @@ public class Navigation extends Thread {
 	private final Object lock;
 	private double radius;
 	private double width;	
-	
-	
-
 
 	private Odometer odometer;
     OdometryDisplay display;
@@ -77,16 +74,16 @@ public class Navigation extends Thread {
 			travelTo(30,60);
 			travelTo(60,0);
    		} else if (demo == 2) {
-   			
-   			while(isAvoiding){
-   				//First way point defined in lab
-   				travelTo(0, 60);
-   			}
-   			while(isAvoiding){
-   				//Second way point defined in lab
-   				travelTo(60, 0);
-   			}
-    	}
+   			do{
+   				//First waypoint defined
+				travelTo(0,60);
+			}while(isAvoiding);
+			do
+			{
+				//Second waypoint defined
+				travelTo(60,0);
+			}while(isAvoiding);
+   		}
     }
     
    /* do{ alternate option since robot isnt moving for part 2
@@ -127,10 +124,16 @@ void travelTo(double x, double y) {
 	//something needs to be added here to put the motors in motion for part 2
 	leftMotor.stop(true);
 	rightMotor.stop(true);
-	if(isAvoiding == true){
+	if(isAvoiding){
 		/*
 		 * LEAVE HERE FOR NOW
 		 */
+		leftMotor.setSpeed(ROTATE_SPEED);
+		rightMotor.setSpeed(ROTATE_SPEED);
+
+		leftMotor.rotate(convertAngle(radius, width, 90.0), true);	//wall encountered: rotate robot 90 degrees
+		rightMotor.rotate(-convertAngle(radius, width, 90.0), false); //wall encountered: rotate robot 90 degrees
+		
 		bangbang.turnON();
 		try {
 			//Give the robot specified time to avoid obstacle
@@ -147,8 +150,7 @@ void travelTo(double x, double y) {
 		isNavigating = true;
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
-		//leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta), true);
-		//rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta), false);
+		
 		leftMotor.rotate(convertAngle(radius, width, theta), true);
 		rightMotor.rotate(-convertAngle(radius, width, theta), false);
 	}
