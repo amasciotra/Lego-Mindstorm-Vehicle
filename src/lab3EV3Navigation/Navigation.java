@@ -54,7 +54,7 @@ public class Navigation extends Thread {
 		// Reset motors
 		for(EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] { leftMotor, rightMotor }){
 			motor.stop();
-			motor.setAcceleration(1500); 
+			motor.setAcceleration(3000); 
 		}
 	}
 

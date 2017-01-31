@@ -68,12 +68,14 @@ public class Odometer extends Thread {
 			updateStart = System.currentTimeMillis();
 			//Find the current phi and rho by converting tacho count of each 
 			//motor to radians (rpm to rads)
-			phi = Math.toRadians(leftMotor.getTachoCount());
-			rho = Math.toRadians(rightMotor.getTachoCount());
+			//phi = Math.toRadians(leftMotor.getTachoCount());
+			//rho = Math.toRadians(rightMotor.getTachoCount());
+			phi = (leftMotor.getTachoCount());
+			rho = (rightMotor.getTachoCount());
 			
 			//Left and right displacements
-			double leftDist = Math.PI * radius * (phi-oldPhi);
-			double rightDist= Math.PI * radius * (rho-oldRho);
+			double leftDist = Math.PI * radius * (phi-oldPhi)/180;
+			double rightDist= Math.PI * radius * (rho-oldRho)/180;
 			oldPhi = phi;
 			oldRho = rho;
 			
@@ -90,11 +92,9 @@ public class Odometer extends Thread {
 			//Compute delta theta (robot position)
 			double deltaTheta = (leftDist - rightDist) / width;
 			//Find delta x and delta y (y is forward, x is right)
-			//double deltaX = deltaAvg * Math.sin(theta + (deltaTheta / 2));
-			//double deltaY = deltaAvg * Math.cos(theta + (deltaTheta / 2));
-			theta += deltaTheta;
-			double deltaX = deltaAvgDist * Math.sin(theta);
-			double deltaY = deltaAvgDist * Math.cos(theta);
+			
+			//double deltaX = deltaAvgDist * Math.sin(theta);
+			//double deltaY = deltaAvgDist * Math.cos(theta);
 			
 			
 			synchronized (lock) {
@@ -105,10 +105,16 @@ public class Odometer extends Thread {
 				 * 
 				 */
 				
+				//double deltaX = deltaAvgDist * Math.sin(theta);
+				//double deltaY = deltaAvgDist * Math.cos(theta);
+				//double deltaX = deltaAvgDist * Math.sin(theta + (deltaTheta / 2));
+				//double deltaY = deltaAvgDist * Math.cos(theta + (deltaTheta / 2));
 				//Update x, y and theta
+				theta += deltaTheta;
+				double deltaX = deltaAvgDist * Math.sin(theta + (deltaTheta / 2));
+				double deltaY = deltaAvgDist * Math.cos(theta + (deltaTheta / 2));
 				x += deltaX;
 				y += deltaY;
-				theta = thetaCorrection(theta + deltaTheta);
 			}
 
 			// this ensures that the odometer only runs once every period
@@ -133,9 +139,15 @@ public class Odometer extends Thread {
 				position[0] = x;
 			if (update[1])
 				position[1] = y;
-			if (update[2])
+			if (update[2]){
 				//Convert angle sent to odometer to degrees
-				position[2] = (theta * 360 / TWO_PI);
+				double degrees = (theta * 360 / TWO_PI);
+				if(degrees > 180)
+					degrees -= 360;
+				if(degrees < -180)
+					degrees += 360;
+				position[2] = degrees;	
+			}
 		}
 	}
 
