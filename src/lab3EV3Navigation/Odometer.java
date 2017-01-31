@@ -1,5 +1,12 @@
 package lab3EV3Navigation;
-//ODOMETER
+
+/**
+ * Odometer code from Lab 2 with minor modifications; used for localization.
+ * 
+ * @author thomaschristinck
+ * @author alexmasciotra
+ */
+
 
 import lejos.hardware.motor.*;
 
@@ -12,9 +19,8 @@ public class Odometer extends Thread {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	// Odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
-	//private static final double WHEEL_RADIUS = 2.07;//2.07
-	//private static final double WHEELBASE_WIDTH = 18.6;//real 18.6
 	private static final double TWO_PI = 2 * Math.PI;
+	//Parameters entered when object is initialized
 	private double radius;
 	private double width;
 	
@@ -47,7 +53,7 @@ public class Odometer extends Thread {
 		return omega;
 	}
 		
-	// run method (required for Thread)
+	// Run method (required for Thread)
 	public void run() {
 		long updateStart, updateEnd;
 		
@@ -59,17 +65,14 @@ public class Odometer extends Thread {
 	    x = 0;
 	    y = 0;
 	    theta = 0;
-	   oldPhi = leftMotor.getTachoCount();
-	   oldRho = rightMotor.getTachoCount();
+	    oldPhi = leftMotor.getTachoCount();
+	    oldRho = rightMotor.getTachoCount();
 	   
 	    		
 	     
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			//Find the current phi and rho by converting tacho count of each 
-			//motor to radians (rpm to rads)
-			//phi = Math.toRadians(leftMotor.getTachoCount());
-			//rho = Math.toRadians(rightMotor.getTachoCount());
+			//Find the current phi and rho 
 			phi = (leftMotor.getTachoCount());
 			rho = (rightMotor.getTachoCount());
 			
@@ -78,24 +81,12 @@ public class Odometer extends Thread {
 			double rightDist= Math.PI * radius * (rho-oldRho)/180;
 			oldPhi = phi;
 			oldRho = rho;
-			
-			//Compute the difference from previous values
-			//double deltaPhi = phi - oldPhi;
-			//double deltaRho = rho - oldRho;
 		
-			//Scale delta angle by the wheel radius
-			//double deltaPhiArc = WHEEL_RADIUS * deltaPhi;
-			//double deltaRhoArc = WHEEL_RADIUS * deltaRho;
-			//Compute average delta 
-			//double deltaAvg = deltaRhoArc + deltaPhiArc / 2;
+		
+			//Compute average delta for distance
 			double deltaAvgDist = (leftDist + rightDist) / 2;
-			//Compute delta theta (robot position)
+			//Compute average delta for theta
 			double deltaTheta = (leftDist - rightDist) / width;
-			//Find delta x and delta y (y is forward, x is right)
-			
-			//double deltaX = deltaAvgDist * Math.sin(theta);
-			//double deltaY = deltaAvgDist * Math.cos(theta);
-			
 			
 			synchronized (lock) {
 				/**
@@ -104,12 +95,7 @@ public class Odometer extends Thread {
 				 * Do not perform complex math
 				 * 
 				 */
-				
-				//double deltaX = deltaAvgDist * Math.sin(theta);
-				//double deltaY = deltaAvgDist * Math.cos(theta);
-				//double deltaX = deltaAvgDist * Math.sin(theta + (deltaTheta / 2));
-				//double deltaY = deltaAvgDist * Math.cos(theta + (deltaTheta / 2));
-				//Update x, y and theta
+				//Update x, y, and theta by delta x, delta y, delta theta
 				theta += deltaTheta;
 				double deltaX = deltaAvgDist * Math.sin(theta + (deltaTheta / 2));
 				double deltaY = deltaAvgDist * Math.cos(theta + (deltaTheta / 2));
@@ -117,13 +103,13 @@ public class Odometer extends Thread {
 				y += deltaY;
 			}
 
-			// this ensures that the odometer only runs once every period
+			// This ensures that the odometer only runs once every period
 			updateEnd = System.currentTimeMillis();
 			if (updateEnd - updateStart < ODOMETER_PERIOD) {
 				try {
 					Thread.sleep(ODOMETER_PERIOD - (updateEnd - updateStart));
 				} catch (InterruptedException e) {
-					// there is nothing to be done here because it is not
+					// There is nothing to be done here because it is not
 					// expected that the odometer will be interrupted by
 					// another thread
 				}

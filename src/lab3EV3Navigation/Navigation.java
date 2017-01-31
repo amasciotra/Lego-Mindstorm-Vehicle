@@ -5,11 +5,19 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+
+/**
+ * Navigation class for lab 3. Provides functionality for demos 1 and 2.
+ * 
+ * 
+ * @author thomaschristinck
+ * @author alexmasciotra
+ */
+
 public class Navigation extends Thread {
 	//Final variables
-	//private static double WHEEL_RADIUS;
-	//private static double TRACK;
-	private static final double BUFFER = 2.5;
+
+	private static final double BUFFER = 2.0;
 	private static final int FORWARD_SPEED = 225;
 	private static final int ROTATE_SPEED = 125;
 	private static int demo;
@@ -19,7 +27,6 @@ public class Navigation extends Thread {
 	private final Object lock;
 	private double radius;
 	private double width;	
-
 	private Odometer odometer;
     OdometryDisplay display;
     BangBangController bangbang;  
@@ -33,13 +40,16 @@ public class Navigation extends Thread {
 	double y = 0;
 	double dX = 0;
 	double dY = 0;
-	private EV3LargeRegulatedMotor leftMotor, rightMotor;
+	
+	//Declare motors
+	private EV3LargeRegulatedMotor leftMotor, rightMotor, usMotor;
  
 	final static TextLCD screen = LocalEV3.get().getTextLCD();   
 	
-	public Navigation(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor, Odometer odometer, UltrasonicPoller usPoller, BangBangController bangbang,double radius, double width){
+	public Navigation(EV3LargeRegulatedMotor leftMotor,EV3LargeRegulatedMotor rightMotor, EV3LargeRegulatedMotor usMotor, Odometer odometer, UltrasonicPoller usPoller, BangBangController bangbang,double radius, double width){
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
+		this.usMotor = usMotor;
 		this.odometer = odometer;
 		this.usPoller = usPoller;
 		this.bangbang = bangbang;
@@ -49,7 +59,6 @@ public class Navigation extends Thread {
 		lock = new Object();
 		destX=0;
 		destY=0;
-		
 		
 		// Reset motors
 		for(EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] { leftMotor, rightMotor }){
@@ -75,25 +84,18 @@ public class Navigation extends Thread {
 			travelTo(60,0);
    		} else if (demo == 2) {
    			do{
-   				//First waypoint defined
+   				//First way-point defined
 				travelTo(0,60);
 			}while(isAvoiding);
 			do
 			{
-				//Second waypoint defined
+				//Second way-point defined
 				travelTo(60,0);
 			}while(isAvoiding);
    		}
     }
     
-   /* do{ alternate option since robot isnt moving for part 2
-			travelTo(0,60);
-		}while (isAvoiding==true);
-			do{
-				travelTo(60,0);
-			}while(isAvoiding==true);
-		}*/
- 
+    //Set destination to a specified x and y
 private void setDest(double x, double y){
 	this.destX = x;
 	this.destY = y;
@@ -102,48 +104,36 @@ private void setDest(double x, double y){
 void travelTo(double x, double y) {
 	setDest(x, y);
 	
+	//Get current x, y and theta
 	double oldX = odometer.getX();
 	double oldY = odometer.getY();
 	double oldTheta = odometer.getTheta();
 	
 	double destTheta = arctan((y - oldY),(x - oldX));
 	synchronized(lock){
+		//Find theta to travel to
 		double dTheta = (((Math.PI / 2) - destTheta - oldTheta));
 		dTheta = angleWrap(dTheta);
 		turnTo((dTheta));
 	}
+	//Head in dTheta direction
 	leftMotor.setSpeed(FORWARD_SPEED);
 	rightMotor.setSpeed(FORWARD_SPEED);
-	
 	leftMotor.forward();
 	rightMotor.forward();
 	
 	while(isNavigating()){
 		//Do nothing
 	}
-	//something needs to be added here to put the motors in motion for part 2
+	if (demo == 2){
+		//If Part 2, turn to second way-point after brick has been avoided
+		do{
+			//Second way-point defined
+			travelTo(60,0);
+		}while(isAvoiding);
+	}
 	leftMotor.stop(true);
 	rightMotor.stop(true);
-	if(isAvoiding){
-		/*
-		 * LEAVE HERE FOR NOW
-		 */
-		leftMotor.setSpeed(ROTATE_SPEED);
-		rightMotor.setSpeed(ROTATE_SPEED);
-
-		leftMotor.rotate(convertAngle(radius, width, 90.0), true);	//wall encountered: rotate robot 90 degrees
-		rightMotor.rotate(-convertAngle(radius, width, 90.0), false); //wall encountered: rotate robot 90 degrees
-		
-		bangbang.turnON();
-		try {
-			//Give the robot specified time to avoid obstacle
-			Thread.sleep(8500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} 
-		bangbang.turnOFF();
-		isAvoiding = false; 
-	}
 }
 	
 	private void turnTo(double theta) {
@@ -182,14 +172,30 @@ void travelTo(double x, double y) {
 	
 	private boolean isNavigating(){
 		//Check if obstacle is present
-		if(usPoller.getDistance() < 10 && demo == 2){
-			isAvoiding = true;
+		if(bangbang.readUSDistance() < 10 && demo == 2){
+			Sound.beep();
+			//Turn to 90
+			turnTo(Math.PI / 2);
+			leftMotor.setSpeed(FORWARD_SPEED);
+			rightMotor.setSpeed(FORWARD_SPEED);
+			usMotor.rotateTo(-90, false);
+			bangbang.turnON();
+			try {
+				//Give the robot specified time to avoid obstacle
+				Thread.sleep(17500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} 
+			usMotor.rotateTo(0, false);
+			bangbang.turnOFF();
+			leftMotor.stop(true);
+			rightMotor.stop(true);
+	
 			return false;
-		}
+	}
 		
 		//if destination reached, stop moving, no obstacle need to be crossed
 		if(Math.abs(odometer.getX() - destX) <= BUFFER && Math.abs(odometer.getY() - destY) <= BUFFER ){
-			Sound.beep();//just putting this here temporary to know when we hit the location
 			isAvoiding = false;
 			return false;	
 		}
@@ -206,16 +212,9 @@ void travelTo(double x, double y) {
 			return angle + 2 * Math.PI;
 		else 
 			return angle;
-			//return angle - 0.5 * Math.PI;
 	}
 	
 	private  int convertAngle(double radius, double width, double angle) { 
-		return (int)((angle*width*90)/(Math.PI*radius));
-		//return convertDistance(radius, Math.PI * width * angle / 360.0); 
+		return (int)((angle*width*90)/(Math.PI*radius)); 
 	}
-	private  int convertDistance(double radius, double distance) { 															 
-		return (int) ((180.0 * distance) / (Math.PI * radius)); 
-	} 
-	      
-	
 } 
