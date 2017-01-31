@@ -9,7 +9,7 @@ public class Navigation extends Thread {
 	//Final variables
 	//private static double WHEEL_RADIUS;
 	//private static double TRACK;
-	private static final double BUFFER = 5;
+	private static final double BUFFER = 2.5;
 	private static final int FORWARD_SPEED = 225;
 	private static final int ROTATE_SPEED = 125;
 	private static int demo;
