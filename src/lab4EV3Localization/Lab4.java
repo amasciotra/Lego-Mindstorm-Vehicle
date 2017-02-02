@@ -1,7 +1,9 @@
 package lab4EV3Localization;
 
+import lab3EV3Navigation.OdometryDisplay;
 import lejos.hardware.*;
 import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
@@ -50,12 +52,11 @@ public class Lab4 {
 		USLocalizer us = new USLocalizer(odo, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
 		Navigation nav = new Navigation(leftMotor, rightMotor, odo, WHEEL_RADIUS, TRACK);
 		
-																
+		LocalizationDisplay display = new LocalizationDisplay(odo);													
 		option = Button.waitForAnyPress();
 		
 		switch(option) {
-		case Button.ID_LEFT:					
-			LocalizationDisplay display = new LocalizationDisplay(odo);				
+		case Button.ID_LEFT:								
 			us.doLocalization();
 			break;						
 		}		
