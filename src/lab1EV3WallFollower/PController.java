@@ -1,4 +1,5 @@
 package lab1EV3WallFollower;
+import lab3EV3Navigation.UltrasonicController;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class PController implements UltrasonicController {
