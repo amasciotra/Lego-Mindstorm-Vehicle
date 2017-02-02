@@ -1,4 +1,4 @@
-package lab3EV3Navigation;
+package lab4EV3Localization;
 
 /**
  * Odometer code from Lab 2 with minor modifications; used for localization.
@@ -118,23 +118,29 @@ public class Odometer extends Thread {
 	}
 
 	// Accessors
-	public void getPosition(double[] position, boolean[] update) {
+	public void getPosition(double[] position) {
 		// Ensure that the values don't change while the odometer is running
 		synchronized (lock) {
-			if (update[0])
-				position[0] = x;
-			if (update[1])
-				position[1] = y;
-			if (update[2]){
-				//Convert angle sent to odometer to degrees
-				double degrees = (theta * 360 / TWO_PI);
-				if(degrees > 180)
-					degrees -= 360;
-				if(degrees < -180)
-					degrees += 360;
-				position[2] = degrees;	
-			}
+			position[0] = x;
+			position[1] = y;
+			//Convert angle sent to odometer to degrees
+			double degrees = (theta * 360 / TWO_PI);
+			if(degrees > 180)
+				degrees -= 360;
+			if(degrees < -180)
+				degrees += 360;
+			position[2] = degrees;	
 		}
+	}
+	
+	public double getRadius()
+	{
+		return radius;
+	}
+	
+	public double getWidth()
+	{
+		return width;
 	}
 
 	public double getX() {
@@ -196,6 +202,10 @@ public class Odometer extends Thread {
 		synchronized (lock) {
 			this.theta = theta;
 		}
+	}
+	
+	public EV3LargeRegulatedMotor [] getMotors() {
+		return new EV3LargeRegulatedMotor[] {this.leftMotor, this.rightMotor};
 	}
 
 	/**

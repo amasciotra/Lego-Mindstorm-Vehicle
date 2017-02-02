@@ -1,4 +1,4 @@
-package lab3EV3Navigation;
+package lab1EV3WallFollower;
 
 public interface UltrasonicController {
 	
