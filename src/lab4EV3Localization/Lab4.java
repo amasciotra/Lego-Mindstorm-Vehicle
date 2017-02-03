@@ -1,6 +1,4 @@
-package lab4EV3Localization;
 
-import lab3EV3Navigation.OdometryDisplay;
 import lejos.hardware.*;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
@@ -8,12 +6,13 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
+import lejos.hardware.lcd.*;
 
 public class Lab4 {
 
 	
-	public static final double TRACK = 18.54;
-	public static final double WHEEL_RADIUS = 2.07;
+	//public static final double TRACK = 18.54;
+	//public static final double WHEEL_RADIUS = 2.07;
 	
 	// Static Resources:
 	// Left motor connected to output A
@@ -24,7 +23,6 @@ public class Lab4 {
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPort = LocalEV3.get().getPort("S2");		
-
 	
 	public static void main(String[] args) {		
 		//Setup ultrasonic sensor
@@ -48,12 +46,24 @@ public class Lab4 {
 				
 		int option = 0;
 		
-		Odometer odo = new Odometer(leftMotor, rightMotor, WHEEL_RADIUS, TRACK);
+		//Odometer odo = new Odometer(leftMotor, rightMotor, WHEEL_RADIUS, TRACK);
+		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true);
 		USLocalizer us = new USLocalizer(odo, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
-		Navigation nav = new Navigation(leftMotor, rightMotor, odo, WHEEL_RADIUS, TRACK);
+		//Navigation nav = new Navigation(leftMotor, rightMotor, odo, WHEEL_RADIUS, TRACK);
+		Navigation nav = new Navigation(odo);
+		LocalizationDisplay LocalizationDisplay = new LocalizationDisplay(odo);
+
+		do {
+			//Clear display
+			LCD.clear();
+			
+			//Ask user which part of lab to execute; part 1 or part 2
+			LCD.drawString("Part 1 | Part 2  ", 0, 4);
+			option = Button.waitForAnyPress();
+		} while (option != Button.ID_LEFT && option != Button.ID_RIGHT);
+		LocalizationDisplay.start();													
+		//option = Button.waitForAnyPress();
 		
-		LocalizationDisplay display = new LocalizationDisplay(odo);													
-		option = Button.waitForAnyPress();
 		
 		switch(option) {
 		case Button.ID_LEFT:								
@@ -69,6 +79,9 @@ public class Lab4 {
 			LightLocalizer lsl = new LightLocalizer(odo, colorValue, colorData, nav);
 			lsl.doLocalization();
 			break;
+			}
+		
 		}
 	}
-}
+
+
