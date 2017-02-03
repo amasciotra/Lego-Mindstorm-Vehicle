@@ -55,7 +55,8 @@ public class USLocalizer {
 				rotateClockwise();
 			}
 			// angle from odometer is stored and motors are stopped
-			angleA = odo.getTheta();
+			//angleA = odo.getTheta();
+			angleA = odo.getAng();
 			stopMotors();
 			// robot will rotate counterclockwise until there is no wall in front of it
 			while(getFilteredData() < WALL_DIST + WALL_ERROR)
@@ -68,7 +69,8 @@ public class USLocalizer {
 				rotateCClockwise();
 			}
 			// angle from odometer is stored and motors are stopped
-			angleB = odo.getTheta();
+			//angleB = odo.getTheta();
+			angleB = odo.getAng();
 			stopMotors();		
 			
 			// this deals with angleA being greater than 360 degrees
@@ -95,7 +97,8 @@ public class USLocalizer {
 				rotateCClockwise();
 			}
 			// the angle from the odometer is stored and the motors are stopped
-			angleA = odo.getTheta();
+			//angleA = odo.getTheta();
+			angleA = odo.getAng();
 			stopMotors();			
 			
 			// robot will rotate clockwise 
@@ -109,7 +112,8 @@ public class USLocalizer {
 				rotateClockwise();
 			}
 			// angle from odometer is stored
-			angleB = odo.getTheta();
+			//angleB = odo.getTheta();
+			angleB = odo.getAng();
 			stopMotors();
 			
 			// this deals with angleA being greater than 360 degrees

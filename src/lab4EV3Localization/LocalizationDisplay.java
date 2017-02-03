@@ -10,6 +10,9 @@ public class LocalizationDisplay extends Thread {
 	
 	public LocalizationDisplay(Odometer odo) {
 		this.odo = odo;
+		
+		
+		
 	}
 	
 	public void run() { 

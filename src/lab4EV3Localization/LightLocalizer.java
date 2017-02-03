@@ -7,9 +7,9 @@ import lejos.robotics.SampleProvider;
 public class LightLocalizer {
 	public static int ROTATION_SPEED = 100;
 	public static int ACCEL = 300;	
-	public static int SENSOR_MIN = 20;
-	public static int SENSOR_MAX = 50;
-	public static int SENSOR_DIST = 15;
+	public static int SENSOR_MIN = 15;/*this needs tweaking, do not know the range needed based on where our light sensor is*/
+	public static int SENSOR_MAX = 25;/*this needs tweaking, do not know the range needed based on where our light sensor is*/
+	public static int SENSOR_DIST = 15;/*this needs tweaking, do not know what it defines*/
 	public static int TURN_ERROR = 5;
 	
 	private Odometer odo;
@@ -39,8 +39,8 @@ public class LightLocalizer {
 		rightMotor.setAcceleration(ACCEL);
 	}
 	
-	public void doLocalization() {
-		forward();		
+	public void doLocalization() {/*this part needs the work so its customizable to our robot*/
+		forward();/*for some reason our robot sometimes goes backwards at the start, it needs to go forward to check the line or else reverse in the wall*/
 		// the robot will move forward until it detects the next black line
 		while(isNavigating)
 		{
@@ -70,7 +70,7 @@ public class LightLocalizer {
 			if(getColorData() < SENSOR_MAX && getColorData() > SENSOR_MIN)
 			{
 				Sound.beep();
-				angles[angleCount] = odo.getTheta();
+				angles[angleCount] = odo.getAng();
 				angleCount++;
 				try {
 					Thread.sleep(200);
@@ -90,19 +90,20 @@ public class LightLocalizer {
 		double yPosition= -1*SENSOR_DIST*Math.cos((Math.PI/180.0)*(thetaY/2.0));
 		
 		// turns to 0 degrees
-		nav.turnTo(0);
+		nav.turnTo(0,true);
 		
 		// updates odometer to current location
 		odo.setPosition(new double [] {xPosition, yPosition, 0}, new boolean [] {true, true, true});
 		
 		// navigates to (0,0) and turns to 0 degrees
 		nav.travelTo(0, 0);
-		nav.turnTo(0);
+		nav.turnTo(0,true);
 		// robot was consistently off so this is the error correction
-		nav.turnTo(360-TURN_ERROR);
+		/*i commented out this part below*/
+		/*nav.turnTo(360-TURN_ERROR,true);
 		stopMotors();
 		Sound.beepSequence();
-		odo.setPosition(new double[] {0, 0, 0}, new boolean[] {true, true, true});		
+		odo.setPosition(new double[] {0, 0, 0}, new boolean[] {true, true, true});	*/	
 	}
 	
 	// method moves the robot a set distance either forward or backwards
@@ -134,7 +135,8 @@ public class LightLocalizer {
 	// method moves the robot forwards and updates the isNavigating value
 	private void forward()
 	{
-		leftMotor.forward();
+		
+		leftMotor.forward();	
 		rightMotor.forward();
 		isNavigating = true;
 	}
