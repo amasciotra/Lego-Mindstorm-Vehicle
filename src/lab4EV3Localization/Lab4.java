@@ -61,12 +61,14 @@ public class Lab4 {
 			LCD.drawString("Part 1 | Part 2  ", 0, 4);
 			option = Button.waitForAnyPress();
 		} while (option != Button.ID_LEFT && option != Button.ID_RIGHT);
-		LocalizationDisplay.start();													
+		//LocalizationDisplay.start();													
 		//option = Button.waitForAnyPress();
 		
 		
 		switch(option) {
-		case Button.ID_LEFT:								
+		
+		case Button.ID_LEFT:	
+			LocalizationDisplay.start();	
 			us.doLocalization();
 			break;						
 		}		
