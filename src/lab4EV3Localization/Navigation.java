@@ -1,8 +1,8 @@
 package lab4EV3Localization;
 
-
 /*
  * File: Navigation.java
+
  * Written by: Sean Lawlor
  * ECSE 211 - Design Principles and Methods, Head TA
  * Fall 2011
@@ -22,11 +22,12 @@ public class Navigation {
 	public Navigation(Odometer odo) {
 		this.odometer = odo;
 
-		EV3LargeRegulatedMotor[] motors = this.odometer.getMotors();
-		this.leftMotor = motors[0];
-		this.rightMotor = motors[1];
+		EV3LargeRegulatedMotor leftMotor = odo.getLeftMotor();
+		EV3LargeRegulatedMotor rightMotor = odo.getRightMotor();
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
 
-		// set acceleration
+		// Set acceleration
 		this.leftMotor.setAcceleration(ACCELERATION);
 		this.rightMotor.setAcceleration(ACCELERATION);
 	}

@@ -11,7 +11,7 @@ public class USLocalizer {
 	public static int WALL_DIST = 30;
 	public static int WALL_ERROR = 3;
 	public static int FILTER_OUT = 5;
-	public static int TURN_ERROR = 7;
+	public static int TURN_ERROR = 8;
 	
 	private Odometer odo;
 	private SampleProvider usSensor;

@@ -158,10 +158,8 @@ public class Odometer implements TimerListener {
 		}
 	}
 	
-	// accessors to motors
-	public EV3LargeRegulatedMotor [] getMotors() {
-		return new EV3LargeRegulatedMotor[] {this.leftMotor, this.rightMotor};
-	}
+	// Accessors to motors
+
 	public EV3LargeRegulatedMotor getLeftMotor() {
 		return this.leftMotor;
 	}

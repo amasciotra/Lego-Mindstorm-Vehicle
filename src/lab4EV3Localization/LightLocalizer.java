@@ -20,27 +20,30 @@ import lejos.robotics.SampleProvider;
 public class LightLocalizer {
 	public static int ROTATION_SPEED = 80;
 	public static int FORWARD_SPEED = 90;
-	public static int ACCEL = 300;	
-	public static int SENSOR_DIST = 2;/*this needs tweaking, do not know what it defines*/
-	public static int TURN_ERROR = 5;
-	private static double THRESHOLD = 0.17;//If beeping too soon - buffer is low
+
+	//This is technically the distance of the sensor from the body sensor, but we kind of use it
+	//as a buffer to correct error
+	public static int SENSOR_DIST = 2;
+	//Right now we use thresholding to sense lines, though I've written some code to make this more universal.
+	//We could try it out if there's time Monday
+	private static double THRESHOLD = 0.17;
 	
-	//Declare odometer, initialize color sensor
+	//Declare odometer, navigator, and initialize color sensor
 	private static final Port colorPort = LocalEV3.get().getPort("S2");	
 	private EV3ColorSensor colorSensor = new EV3ColorSensor(colorPort);
 	private static SampleProvider sampleProvider;
 	private Odometer odo;	
+	private Navigation nav;
+	
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private boolean isNavigating;
 	private int sensorAve = 0;
-	private Navigation nav;
 	
 	public LightLocalizer(Odometer odo, Navigation nav) {
 		this.odo = odo;
 		this.nav = nav;
-		EV3LargeRegulatedMotor[] motors = odo.getMotors();
-		this.leftMotor = motors[0];
-		this.rightMotor = motors[1];
+		this.leftMotor = odo.getLeftMotor();
+		this.rightMotor = odo.getRightMotor();
 		this.isNavigating = false;
 	}
 	
@@ -140,7 +143,6 @@ public class LightLocalizer {
 	
 	// Method rotates robot by theta degrees
 	private void rotate(double theta){
-		//theta += TURN_ERROR;
 		leftMotor.rotate(convertAngle(odo.getRadius(), odo.getWidth(), theta), true);
 		rightMotor.rotate(-convertAngle(odo.getRadius(), odo.getWidth(), theta), false);
 	}
@@ -151,14 +153,14 @@ public class LightLocalizer {
 		rightMotor.forward();
 	}
 	
-	// method moves the robot forwards and updates the isNavigating value
+	// Method moves the robot forwards and updates the isNavigating value
 	private void forward(){
 		leftMotor.forward();	
 		rightMotor.forward();
 		isNavigating = true;
 	}
 	
-	// method stops motors and updates isNavigating value
+	// Method stops motors and updates isNavigating value
 	private void stopMotors(){
 		leftMotor.stop(true);
 		rightMotor.stop(false);
