@@ -19,23 +19,26 @@ public class Lab4 {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	
 	public static void main(String[] args) {		
-		//Setup ultrasonic sensor
+		//Setup ultrasonic sensor. Suppress warnings because we don't bother closing the resource
 		// 1. Create a port object attached to a physical port (done above)
 		// 2. Create a sensor instance and attach to port
 		// 3. Create a sample provider instance for the above and initialize operating mode
 		// 4. Create a buffer for the sensor data
-		@SuppressWarnings("resource")							    	// Because we don't bother to close this resource
+		@SuppressWarnings("resource")							    
 		SensorModes usSensor = new EV3UltrasonicSensor(usPort);
-		SampleProvider usValue = usSensor.getMode("Distance");			// colorValue provides samples from this instance
-		float[] usData = new float[usValue.sampleSize()];				// colorData is the buffer in which data are returned
+		SampleProvider usValue = usSensor.getMode("Distance");			
+		float[] usData = new float[usValue.sampleSize()];				
 		int option = 0;
 		
-		//Odometer odo = new Odometer(leftMotor, rightMotor, WHEEL_RADIUS, TRACK);
+		//Initialize odometer and navigator
 		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true);
-		USLocalizer us = new USLocalizer(odo, usValue, usData, USLocalizer.LocalizationType.RISING_EDGE);
-		
-		//Navigation nav = new Navigation(leftMotor, rightMotor, odo, WHEEL_RADIUS, TRACK);
 		Navigation nav = new Navigation(odo);
+		
+		//Initialize light and ultrasonic localizers
+		USLocalizer us = new USLocalizer(odo, usValue, usData, USLocalizer.LocalizationType.RISING_EDGE);
+		LightLocalizer lsl = new LightLocalizer(odo, nav);
+		
+		//Display
 		LocalizationDisplay LocalizationDisplay = new LocalizationDisplay(odo);
 
 		do {
@@ -53,7 +56,7 @@ public class Lab4 {
 			us.doLocalization();
 		}
 		else if (option == Button.ID_RIGHT){
-			LightLocalizer lsl = new LightLocalizer(odo, nav);
+			LocalizationDisplay.start();	
 			lsl.doLocalization();
 		}
 	while (Button.waitForAnyPress() != Button.ID_ESCAPE);

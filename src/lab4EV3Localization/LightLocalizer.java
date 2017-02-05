@@ -7,13 +7,23 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 
+/**
+ * Light Localizer class uses the light sensor to localize the robot, assuming the robot starts in the lower left quadrant
+ * (i.e. in the correct location after running USLocalizer). After localization, the robot should travel to (0, 0, 0).
+ * 
+ * Sunday February 5, 2017
+ * 2:30pm
+ * 
+ * @author thomaschristinck
+ * @author alexmasciotra
+ */
 public class LightLocalizer {
 	public static int ROTATION_SPEED = 80;
 	public static int FORWARD_SPEED = 90;
 	public static int ACCEL = 300;	
 	public static int SENSOR_DIST = 2;/*this needs tweaking, do not know what it defines*/
 	public static int TURN_ERROR = 5;
-	private static double THRESHOLD = 0.18;//If beeping too soon - buffer is low
+	private static double THRESHOLD = 0.17;//If beeping too soon - buffer is low
 	
 	//Declare odometer, initialize color sensor
 	private static final Port colorPort = LocalEV3.get().getPort("S2");	
@@ -63,7 +73,7 @@ public class LightLocalizer {
 		
 		// The robot will move forward until it detects the next black line (along x-axis)
 	    forward();
-	    System. out.print("Value: " + getColorData() + "" );
+
 		while(isNavigating)
 		{
 			if(blackLineDetected())
@@ -86,7 +96,7 @@ public class LightLocalizer {
   				counter++;
   				try {
   					//Sleep to avoid counting the same line twice
-  					Thread.sleep(200);
+  					Thread.sleep(400);
   				} catch (InterruptedException e) {}
   			}
 		}
@@ -94,14 +104,15 @@ public class LightLocalizer {
 		stopMotors();
 		
 		// Calculates its current position
-		double thetaX = angle[3] - angle[1];
-		double thetaY = angle[2] - angle[0];
+		double thetaX = angle[2] - angle[0];
+		double thetaY = angle[3] - angle[1];
 		
-		double xPosition = -1*SENSOR_DIST*Math.cos(Math.toRadians(thetaX/2));
-		double yPosition= -1*SENSOR_DIST*Math.cos(Math.toRadians(thetaY/2));
+		double xPosition = -1*SENSOR_DIST*Math.sin(Math.toRadians(thetaX/2));
+		double yPosition= -1*SENSOR_DIST*Math.sin(Math.toRadians(thetaY/2));
 		
 		//Correct theta, then add to current theta
-		double newTheta = 180 + thetaX - angle[3]; 
+		double newTheta = 168 - angle[0]; 
+		System.out.println("\n\n\n\n New theta: " + (int)newTheta + "\n odometer: " + (int)odo.getTheta());
 		newTheta += odo.getTheta();
 		newTheta = Odometer.fixDegAngle(newTheta);
 		
@@ -129,14 +140,15 @@ public class LightLocalizer {
 	
 	// Method rotates robot by theta degrees
 	private void rotate(double theta){
+		//theta += TURN_ERROR;
 		leftMotor.rotate(convertAngle(odo.getRadius(), odo.getWidth(), theta), true);
 		rightMotor.rotate(-convertAngle(odo.getRadius(), odo.getWidth(), theta), false);
 	}
 	
 	// Method rotates robot counterclockwise
 	private void rotate(){
-		leftMotor.forward();
-		rightMotor.backward();
+		leftMotor.backward();
+		rightMotor.forward();
 	}
 	
 	// method moves the robot forwards and updates the isNavigating value

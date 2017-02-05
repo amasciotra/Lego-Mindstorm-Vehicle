@@ -124,7 +124,10 @@ public class Odometer implements TimerListener {
 	// Returns theta value
 	public double getTheta() {
 		synchronized (this) {
-			return theta;
+			if (theta < 0.0)
+				theta = 360.0 + (theta % 360.0);
+
+			return theta % 360.0;
 		}
 	}
 
