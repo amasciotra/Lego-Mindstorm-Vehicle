@@ -10,9 +10,6 @@ public class LocalizationDisplay extends Thread {
 	
 	public LocalizationDisplay(Odometer odo) {
 		this.odo = odo;
-		
-		
-		
 	}
 	
 	public void run() { 
@@ -25,7 +22,7 @@ public class LocalizationDisplay extends Thread {
 		while (true) {
 			displayStart = System.currentTimeMillis();
 
-			// clear the lines for displaying odometry information
+			// Clear the lines for displaying odometry information
 			LCD.drawString("X:              ", 0, 0);
 			LCD.drawString("Y:              ", 0, 1);
 			LCD.drawString("T:              ", 0, 2);
@@ -38,13 +35,13 @@ public class LocalizationDisplay extends Thread {
 				LCD.drawString(formattedDoubleToString(position[i], 2), 3, i);
 			}
 
-			// throttle the OdometryDisplay
+			// Throttle the OdometryDisplay
 			displayEnd = System.currentTimeMillis();
 			if (displayEnd - displayStart < DISPLAY_PERIOD) {
 				try {
 					Thread.sleep(DISPLAY_PERIOD - (displayEnd - displayStart));
 				} catch (InterruptedException e) {
-					// there is nothing to be done here because it is not
+					// There is nothing to be done here because it is not
 					// expected that OdometryDisplay will be interrupted
 					// by another thread
 				}
@@ -77,11 +74,11 @@ public class LocalizationDisplay extends Thread {
 			result += stack;
 		}
 		
-		// put the decimal, if needed
+		// Put the decimal, if needed
 		if (places > 0) {
 			result += ".";
 		
-			// put the appropriate number of decimals
+			// Put the appropriate number of decimals
 			for (int i = 0; i < places; i++) {
 				x = Math.abs(x);
 				x = x - Math.floor(x);

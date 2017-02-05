@@ -10,8 +10,8 @@ public class USLocalizer {
 	public static int MAX_DIST = 50;
 	public static int WALL_DIST = 30;
 	public static int WALL_ERROR = 3;
-	public static int FILTER_OUT = 3;
-	public static int TURN_ERROR = 8;
+	public static int FILTER_OUT = 5;
+	public static int TURN_ERROR = 7;
 	
 	private Odometer odo;
 	private SampleProvider usSensor;
@@ -28,9 +28,10 @@ public class USLocalizer {
 		this.usData = usData;
 		this.locType = locType;
 		this.filterControl = 0;
-		EV3LargeRegulatedMotor[] motors = odo.getMotors();
-		this.leftMotor = motors[0];
-		this.rightMotor = motors[1];
+		EV3LargeRegulatedMotor leftMotor = odo.getLeftMotor();
+		EV3LargeRegulatedMotor rightMotor = odo.getRightMotor();
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
 		filterControl = 0;
 		prevDistance = 50;
 	}
@@ -44,87 +45,84 @@ public class USLocalizer {
 		rightMotor.setAcceleration(ACCEL);
 		
 		if (locType == LocalizationType.FALLING_EDGE) {
-			// robot will rotate clockwise until there is no wall in front of it
+			// Robot rotates clockwise until it no longer sees wall
 			while(getFilteredData() < WALL_DIST + WALL_ERROR) 
 			{
 				rotateClockwise();
 			}
-			// robot will continue to rotate clockwise when it sees no wall until it sees another wall in front of it
+			// Robot continues rotating until it sees another wall
 			while(getFilteredData() > WALL_DIST)
 			{
 				rotateClockwise();
 			}
-			// angle from odometer is stored and motors are stopped
-			//angleA = odo.getTheta();
-			angleA = odo.getAng();
+			//When wall is found, stop motors and latch the angle (angle A)
+			angleA = odo.getTheta();
 			stopMotors();
-			// robot will rotate counterclockwise until there is no wall in front of it
+			
+			// Robot will rotate counterclockwise until there is no wall in front of it
 			while(getFilteredData() < WALL_DIST + WALL_ERROR)
 			{
 				rotateCClockwise();
 			}
-			// robot will continue to rotate counterclockwise until it sees another wall in front of it
+			// Robot will continue to rotate until it sees another wall
 			while(getFilteredData() > WALL_DIST)
 			{
 				rotateCClockwise();
 			}
-			// angle from odometer is stored and motors are stopped
-			//angleB = odo.getTheta();
-			angleB = odo.getAng();
+			// Again, when wall is found, stop motors and latch the angle
+			angleB = odo.getTheta();
 			stopMotors();		
 			
-			// this deals with angleA being greater than 360 degrees
+			// This deals with angleA being greater than 360 degrees
 			if(angleA > angleB)
 				angleA -= 360;
 			
-			// avgAngle is 45 degrees away from "trueNorth" which is the zero degrees the robot needs to turn to
-			avgAngle = (angleA + angleB)/2.0;
+			// The average angle of the two is 45 degrees away from "trueNorth" which is the zero degrees the robot needs to turn to
+			avgAngle = (angleA + angleB) / 2.0;
 			trueNorth =  angleB - avgAngle + 45;			
 			
-			// rotate to trueNorth and add TURN_ERROR which was calculated from the trials we ran
+			// Rotate to trueNorth and add TURN_ERROR which was calculated from the trials we ran
 			rotate(trueNorth + TURN_ERROR);
-			
 			odo.setPosition(new double [] {0.0, 0.0, 0.0}, new boolean [] {true, true, true});
 		} else {
-			// robot will rotate counterclockwise
+			// Rising edge - robot will rotate counterclockwise
 			while(getFilteredData() > WALL_DIST - WALL_ERROR)
 			{
 				rotateCClockwise();
 			}
-			// robot will continue to rotate counterclockwise until there is no wall in front of it
+			// Robot will continue to rotate counterclockwise until there is no wall in front of it
 			while(getFilteredData() < WALL_DIST)
 			{
 				rotateCClockwise();
 			}
-			// the angle from the odometer is stored and the motors are stopped
+			// Without the wall in front of it, stop motors and latch the angle (angle A)
 			//angleA = odo.getTheta();
-			angleA = odo.getAng();
+			angleA = odo.getTheta();
 			stopMotors();			
 			
-			// robot will rotate clockwise 
+			// Robot will now rotate clockwise 
 			while(getFilteredData() > WALL_DIST - WALL_ERROR)
 			{
 				rotateClockwise();
 			}
-			// robot will continue to rotate clockwise until there is no wall in front of it
+			// Robot will continue to rotate clockwise until there is no wall in front of it
 			while(getFilteredData() < WALL_DIST)
 			{
 				rotateClockwise();
 			}
-			// angle from odometer is stored
-			//angleB = odo.getTheta();
-			angleB = odo.getAng();
+			// The angle from odometer is stored, stop motors and latch the angle
+			angleB = odo.getTheta();
 			stopMotors();
 			
-			// this deals with angleA being greater than 360 degrees
+			// This deals with angleA being greater than 360 degrees
 			if(angleA > angleB)
 				angleA -= 360;
 			
-			// avgAngle is 45 degrees away from "trueNorth" which is the zero degrees the robot needs to turn to
+			// The average angle is 45 degrees away from "trueNorth" which is the zero degrees the robot needs to turn to
 			avgAngle = (angleA + angleB)/2.0;
 			trueNorth = angleB - avgAngle + 45;
 			
-			// rotate to trueNorth and add TURN_ERROR which was calculated from the trials we ran
+			// Rotate to trueNorth and add TURN_ERROR which was calculated from the trials we ran
 			rotate(trueNorth - TURN_ERROR);
 			
 			odo.setPosition(new double [] {0.0, 0.0, 0.0}, new boolean [] {true, true, true});
@@ -175,8 +173,8 @@ public class USLocalizer {
 		return convertDistance(radius, Math.PI * width * angle / 360.0); 
 	}
 	
-	// Method returns the value of the Ultrasonic Sensor. The largest distance we want is 50cm so any distance thats greater than 50 is capped at 50cm.
-	// 
+	// Method returns the value of the Ultrasonic Sensor. The largest distance we want is 50 cm so any distance 
+	// greater than 50 is capped at 50 cm.
 	private float getFilteredData() {
 		usSensor.fetchSample(usData, 0);
 		float distance = (int)(100.0 * usData[0]);
