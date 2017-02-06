@@ -1,5 +1,5 @@
 package lab4EV3Localization;
-//Odomete.java taken from ECSE 211 TA Sean Lawlor with permisson
+//Odometer.java taken from ECSE 211 TA Sean Lawlor with permisson
 /*
  * File: Odometer.java
  * Written by: Sean Lawlor
