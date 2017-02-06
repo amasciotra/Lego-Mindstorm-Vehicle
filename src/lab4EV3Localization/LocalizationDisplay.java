@@ -3,6 +3,18 @@ package lab4EV3Localization;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 
+/**
+ * The US Localization Display class displays relevant information regarding the robot's position provided 
+ * by the odometer.
+ * 
+ * Monday February 6, 2017
+ * 2:50pm
+ * 
+ * @author thomaschristinck
+ * @author alexmasciotra
+ */
+
+
 public class LocalizationDisplay extends Thread {
 	private static final long DISPLAY_PERIOD = 250;
 	private Odometer odo;

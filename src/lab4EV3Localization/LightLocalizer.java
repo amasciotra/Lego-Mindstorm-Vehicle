@@ -17,6 +17,7 @@ import lejos.robotics.SampleProvider;
  * @author thomaschristinck
  * @author alexmasciotra
  */
+
 public class LightLocalizer {
 	public static int ROTATION_SPEED = 80;
 	public static int FORWARD_SPEED = 90;
@@ -54,6 +55,11 @@ public class LightLocalizer {
 		sampleProvider = colorSensor.getRedMode();
 		
 		//Calibrate the sensor - basically read the sensor and see what value we get
+		try {
+			//Sleep to avoid counting the same line twice
+			Thread.sleep(200);
+		} catch (InterruptedException e) {}
+		
 	    calibrateSensorAverage();
 	    
 	    //Motor speeds
@@ -115,15 +121,11 @@ public class LightLocalizer {
 		
 		//Correct theta, then add to current theta
 		double newTheta = 168 - angle[0]; 
-		System.out.println("\n\n\n\n New theta: " + (int)newTheta + "\n odometer: " + (int)odo.getTheta());
 		newTheta += odo.getTheta();
 		newTheta = Odometer.fixDegAngle(newTheta);
 		
 		// Updates odometer to current location
 		odo.setPosition(new double [] {xPosition, yPosition, newTheta}, new boolean [] {true, true, true});
-		
-		// Turns to 0 degrees
-		//nav.turnTo(0,true);
 		
 		// navigates to (0,0) and turns to 0 degrees
 		nav.travelTo(0, 0);
@@ -193,7 +195,7 @@ public class LightLocalizer {
   		float lineCheck = getColorData();
   		//float deltaCheck = Math.abs(sensorAve - lineCheck);
   		//Black line is detected if the color is below the tile's color by a threshold
-  		boolean isHit = (lineCheck < THRESHOLD);
+  		boolean isHit = (lineCheck < sensorAve);
   		if (isHit)
   			Sound.beep();	
   		return isHit; 

@@ -3,6 +3,17 @@ package lab4EV3Localization;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
 
+/**
+ * US Localizer class uses the US sensor to turn robot in the theta = 0 direction, assuming the robot starts in the lower left quadrant
+ * After localization, the robot should be facing 0 degrees
+ * 
+ * Monday February 6, 2017
+ * 2:41pm
+ * 
+ * @author thomaschristinck
+ * @author alexmasciotra
+ */
+
 public class USLocalizer {
 	public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
 	public static int ROTATION_SPEED = 100;
@@ -39,7 +50,8 @@ public class USLocalizer {
 	public void doLocalization() {
 		double angleA, angleB;
 		
-		leftMotor.setSpeed(ROTATION_SPEED); //sets motor speeds and accelerations
+		//Sets motor speeds and accelerations
+		leftMotor.setSpeed(ROTATION_SPEED); 
 		rightMotor.setSpeed(ROTATION_SPEED);
 		leftMotor.setAcceleration(ACCEL);
 		rightMotor.setAcceleration(ACCEL);

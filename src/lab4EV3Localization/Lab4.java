@@ -8,6 +8,18 @@ import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.lcd.*;
 
+/**
+ * Main class for lab 4, handles user-initiated events  assuming the robot starts in the lower left quadrant
+ * After localization, the robot should be at (0, 0) facing 0 degrees
+ * 
+ * Monday February 6, 2017
+ * 2:41pm
+ * 
+ * @author thomaschristinck
+ * @author alexmasciotra
+ */
+
+
 public class Lab4 {
 	// Static Resources:
 	// Left motor connected to output A
@@ -20,10 +32,6 @@ public class Lab4 {
 	
 	public static void main(String[] args) {		
 		//Setup ultrasonic sensor. Suppress warnings because we don't bother closing the resource
-		// 1. Create a port object attached to a physical port (done above)
-		// 2. Create a sensor instance and attach to port
-		// 3. Create a sample provider instance for the above and initialize operating mode
-		// 4. Create a buffer for the sensor data
 		@SuppressWarnings("resource")							    
 		SensorModes usSensor = new EV3UltrasonicSensor(usPort);
 		SampleProvider usValue = usSensor.getMode("Distance");			
@@ -54,6 +62,9 @@ public class Lab4 {
 		if (option == Button.ID_LEFT) {	
 			LocalizationDisplay.start();	
 			us.doLocalization();
+			Button.waitForAnyPress();
+			lsl.doLocalization();
+			
 		}
 		else if (option == Button.ID_RIGHT){
 			LocalizationDisplay.start();	
