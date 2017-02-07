@@ -1,5 +1,6 @@
 package lab4EV3Localization;
 //Odometer.java taken from ECSE 211 TA Sean Lawlor with permisson
+
 /*
  * File: Odometer.java
  * Written by: Sean Lawlor
@@ -132,6 +133,12 @@ public class Odometer implements TimerListener {
 		}
 	}
 
+	public void setX(double x) {
+		synchronized (this) {
+			this.x = x;
+		}
+	}
+	
 	public void setTheta(double theta) {
 		synchronized (this) {
 			this.theta = theta;

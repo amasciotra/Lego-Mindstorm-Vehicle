@@ -24,10 +24,7 @@ public class LightLocalizer {
 
 	//This is technically the distance of the sensor from the body sensor, but we kind of use it
 	//as a buffer to correct error
-	public static double SENSOR_DIST = 2.2;
-	//Right now we use thresholding to sense lines, though I've written some code to make this more universal.
-	//We could try it out if there's time Monday
-	//private static double THRESHOLD = 0.09;
+	public static double SENSOR_DIST = 2.4;
 	private static double BUFFER = 0.05;
 	
 	//Declare odometer, navigator, and initialize color sensor
@@ -118,12 +115,11 @@ public class LightLocalizer {
 		double thetaY = angle[3] - angle[1];
 		
 		double xPosition = -1*SENSOR_DIST*Math.sin(Math.toRadians(thetaX/2));
-		System.out.println("\n\n\n X:  " + xPosition);
 		double yPosition= -1*SENSOR_DIST*Math.sin(Math.toRadians(thetaY/2));
 		
 		//Correct theta, then add to current theta
-		//Adjust 168 to correct theta
-		double newTheta = 180 - angle[0]; 
+		//Used 176 degrees instead of 180 to correct theta
+		double newTheta = 176 - angle[0]; 
 		newTheta += odo.getTheta();
 		newTheta = Odometer.fixDegAngle(newTheta);
 		
@@ -188,11 +184,10 @@ public class LightLocalizer {
   		for(int i = 0;i < 4; i++){
   			sensorValue += getColorData();;
   		}
-  		sensorValue = (float)(sensorValue * 0.25);
+  		sensorValue = (float) (sensorValue * 0.25);
   		this.sensorAve = sensorValue;
   		if (sensorValue < 0.05){
   		//Sleep to avoid counting the same line twice
-  			System.out.println("\n\n\n Sensor Av: " + sensorValue);
   			try
   			{
 			Thread.sleep(200);

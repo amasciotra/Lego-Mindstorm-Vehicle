@@ -32,7 +32,7 @@ public class USLocalizer {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private int filterControl;	
 	private float prevDistance;
-	private double angleA, angleB, avgAngle, trueNorth;
+	private double avgAngle, trueNorth;
 		
 	public USLocalizer(Odometer odo,  SampleProvider usSensor, float[] usData, LocalizationType locType) {
 		this.odo = odo;
@@ -142,16 +142,6 @@ public class USLocalizer {
 		}
 	}
 	
-	
-	public double[] getAngles()
-	{
-		double[] angles = new double[4];
-		angles[0] = angleA;
-		angles[1] = angleB;
-		angles[2] = avgAngle;
-		angles[3] = trueNorth;
-		return angles;
-	}
 	private void rotateClockwise()
 	{
 		leftMotor.forward();

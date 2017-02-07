@@ -28,7 +28,7 @@ public class LocalizationDisplay extends Thread {
 		long displayStart, displayEnd;
 		double[] position = new double[3];
 
-		// clear the display once
+		// Clear the display once
 		LCD.clear();
 
 		while (true) {
