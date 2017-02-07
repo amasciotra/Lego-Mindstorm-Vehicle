@@ -11,8 +11,8 @@ import lejos.robotics.SampleProvider;
  * Light Localizer class uses the light sensor to localize the robot, assuming the robot starts in the lower left quadrant
  * (i.e. in the correct location after running USLocalizer). After localization, the robot should travel to (0, 0, 0).
  * 
- * Sunday February 5, 2017
- * 2:30pm
+ * Tuesday February 7, 2017
+ * 9:30am
  * 
  * @author thomaschristinck
  * @author alexmasciotra
@@ -24,10 +24,11 @@ public class LightLocalizer {
 
 	//This is technically the distance of the sensor from the body sensor, but we kind of use it
 	//as a buffer to correct error
-	public static int SENSOR_DIST = 2;
+	public static double SENSOR_DIST = 2.2;
 	//Right now we use thresholding to sense lines, though I've written some code to make this more universal.
 	//We could try it out if there's time Monday
-	private static double THRESHOLD = 0.17;
+	//private static double THRESHOLD = 0.09;
+	private static double BUFFER = 0.05;
 	
 	//Declare odometer, navigator, and initialize color sensor
 	private static final Port colorPort = LocalEV3.get().getPort("S2");	
@@ -38,7 +39,7 @@ public class LightLocalizer {
 	
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private boolean isNavigating;
-	private int sensorAve = 0;
+	private float sensorAve = 0;
 	
 	public LightLocalizer(Odometer odo, Navigation nav) {
 		this.odo = odo;
@@ -53,7 +54,7 @@ public class LightLocalizer {
 		double [] angle = new double [4]; 
 		//Operate sensor in reflection mode
 		sampleProvider = colorSensor.getRedMode();
-		
+		odo.setTheta(90);
 		//Calibrate the sensor - basically read the sensor and see what value we get
 		try {
 			//Sleep to avoid counting the same line twice
@@ -75,7 +76,7 @@ public class LightLocalizer {
 				stopMotors();
 		}
 		
-		// The robot then moves back a set amount and rotates 90 degrees
+		// The robot then moves forward a set amount and rotates 90 degrees
 		moveDistance(SENSOR_DIST, true);
 		rotate(-90);
 		forward();
@@ -88,7 +89,7 @@ public class LightLocalizer {
 			if(blackLineDetected())
 				stopMotors();
 		}
-		// The robot then moves forward a set amount
+		// The robot then moves forward a set amount (slightly greater than before)
 		moveDistance(SENSOR_DIST, true);
 		rotate();
 				
@@ -117,17 +118,19 @@ public class LightLocalizer {
 		double thetaY = angle[3] - angle[1];
 		
 		double xPosition = -1*SENSOR_DIST*Math.sin(Math.toRadians(thetaX/2));
+		System.out.println("\n\n\n X:  " + xPosition);
 		double yPosition= -1*SENSOR_DIST*Math.sin(Math.toRadians(thetaY/2));
 		
 		//Correct theta, then add to current theta
-		double newTheta = 168 - angle[0]; 
+		//Adjust 168 to correct theta
+		double newTheta = 180 - angle[0]; 
 		newTheta += odo.getTheta();
 		newTheta = Odometer.fixDegAngle(newTheta);
 		
 		// Updates odometer to current location
 		odo.setPosition(new double [] {xPosition, yPosition, newTheta}, new boolean [] {true, true, true});
 		
-		// navigates to (0,0) and turns to 0 degrees
+		// Navigates to (0,0) and turns to 0 degrees
 		nav.travelTo(0, 0);
 		nav.turnTo(0,true);
 	}
@@ -180,22 +183,30 @@ public class LightLocalizer {
 	}
 	
 	//Calibrates sensor (baseline is average of 4 tile readings)
-  	private int calibrateSensorAverage(){
-  		int sensorValue = 0;
+  	private float calibrateSensorAverage(){
+  		float sensorValue = 0;
   		for(int i = 0;i < 4; i++){
-  			sensorValue += 100 * getColorData();;
+  			sensorValue += getColorData();;
   		}
-  		sensorValue = sensorValue / 4;
+  		sensorValue = (float)(sensorValue * 0.25);
   		this.sensorAve = sensorValue;
+  		if (sensorValue < 0.05){
+  		//Sleep to avoid counting the same line twice
+  			System.out.println("\n\n\n Sensor Av: " + sensorValue);
+  			try
+  			{
+			Thread.sleep(200);
+			} catch (InterruptedException e) {}
+  			calibrateSensorAverage();
+  		}
   		return sensorValue;	
   	}
   	
 	// Helper method to detect the black line
   	private boolean blackLineDetected() {
   		float lineCheck = getColorData();
-  		//float deltaCheck = Math.abs(sensorAve - lineCheck);
   		//Black line is detected if the color is below the tile's color by a threshold
-  		boolean isHit = (lineCheck < sensorAve);
+  		boolean isHit = (lineCheck < sensorAve - BUFFER);
   		if (isHit)
   			Sound.beep();	
   		return isHit; 

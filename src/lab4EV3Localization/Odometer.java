@@ -47,6 +47,7 @@ public class Odometer implements TimerListener {
 		this.rightMotor = rightMotor;
 		
 		// default values, modify for your robot
+		//2.07
 		this.RADIUS = 2.07;
 		this.WIDTH = 18.64;
 		
@@ -128,6 +129,12 @@ public class Odometer implements TimerListener {
 				theta = 360.0 + (theta % 360.0);
 
 			return theta % 360.0;
+		}
+	}
+
+	public void setTheta(double theta) {
+		synchronized (this) {
+			this.theta = theta;
 		}
 	}
 
