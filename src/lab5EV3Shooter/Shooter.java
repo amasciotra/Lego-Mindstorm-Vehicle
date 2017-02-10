@@ -32,6 +32,8 @@ public class Shooter {
 	public Shooter(EV3LargeRegulatedMotor shooterMotor, Odometer odometer) {
 		this.odometer = odometer;
 		this.shooterMotor = shooterMotor;
+		leftMotor = odometer.getLeftMotor();
+		rightMotor = odometer.getRightMotor();
 	}
 	
 	public void shootLeft() {
@@ -44,15 +46,16 @@ public class Shooter {
 		//Check if robot is already directed to target
 		if (odometer.getTheta() > 90 + BUFFER) {
 			//Already facing target
-		} else if (odometer.getTheta() < TARGET_ANGLE + BUFFER) {
-			rotate(2 * TARGET_ANGLE);
+		} else if (odometer.getTheta() < 90 - BUFFER) {
+			//Facing far right
+			rotate(-2 * TARGET_ANGLE);
 		} else{
-			rotate(TARGET_ANGLE);
+			rotate(-TARGET_ANGLE);
 		}
 		//Now shoot
-		shooterMotor.rotate(SHOOTING_ANGLE, true);
+		shooterMotor.rotate(SHOOTING_ANGLE, false);
 		//Return to resting position
-		shooterMotor.rotate(-SHOOTING_ANGLE, true);
+		shooterMotor.rotate(-SHOOTING_ANGLE, false);
 		stopMotors();
 	}
 	
@@ -68,14 +71,14 @@ public class Shooter {
 			//Already facing target
 		} else if (odometer.getTheta() > 90 + BUFFER) {
 			//Facing left, turn thought to face right target
-			rotate(-2 * TARGET_ANGLE);
+			rotate(2 * TARGET_ANGLE);
 		} else{
-			rotate(-TARGET_ANGLE);
+			rotate(TARGET_ANGLE);
 		}
 		//Now shoot
-		shooterMotor.rotate(SHOOTING_ANGLE, true);
+		shooterMotor.rotate(SHOOTING_ANGLE, false);
 		//Return to resting position
-		shooterMotor.rotate(-SHOOTING_ANGLE, true);
+		shooterMotor.rotate(-SHOOTING_ANGLE, false);
 		stopMotors();
 	}
 	
@@ -91,14 +94,14 @@ public class Shooter {
 			//Already facing target
 		} else if (odometer.getTheta() > 90 + BUFFER) {
 			//Facing left, turn thought to face straight target
-			rotate(-TARGET_ANGLE);
-		} else{
 			rotate(TARGET_ANGLE);
+		} else{
+			rotate(-TARGET_ANGLE);
 		}
 		//Now shoot
-		shooterMotor.rotate(SHOOTING_ANGLE, true);
+		shooterMotor.rotate(SHOOTING_ANGLE, false);
 		//Return to resting position
-		shooterMotor.rotate(-SHOOTING_ANGLE, true);
+		shooterMotor.rotate(-SHOOTING_ANGLE, false);
 		stopMotors();
 	}
 	
@@ -108,11 +111,11 @@ public class Shooter {
 	
 	private void stopMotors(){
 		leftMotor.stop(true);
-		rightMotor.stop(false);
+		rightMotor.stop(true);
 	}
 	
 	private void rotate(double theta) {
-		leftMotor.rotate(convertAngle(odometer.getRadius(), odometer.getWidth(), theta), true);
+		leftMotor.rotate(convertAngle(odometer.getRadius(), odometer.getWidth(), theta), false);
 		rightMotor.rotate(-convertAngle(odometer.getRadius(), odometer.getWidth(), theta), false);
 	}
 	

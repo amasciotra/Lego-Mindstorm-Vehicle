@@ -13,7 +13,7 @@ import lejos.hardware.lcd.TextLCD;
  * @author alexmasciotra
  */
 public class ShooterDisplay extends Thread {
-	private static final long DISPLAY_PERIOD = 250;
+	private static final long DISPLAY_PERIOD = 500;
 	private Odometer odometer;
 	private Shooter shooter;
 	private TextLCD LCD = LocalEV3.get().getTextLCD();
@@ -40,9 +40,9 @@ public class ShooterDisplay extends Thread {
 		
 
 			// Get the odometry information
-			LCD.drawString(formattedDoubleToString(odometer.getTheta(), 2), 3, 0);
+			LCD.drawString(formattedDoubleToString(odometer.getTheta(), 2), 7, 0);
 			//Get target information
-			LCD.drawString(Integer.toString(shooter.getTargetNumber()), 3, 1);
+			LCD.drawString(Integer.toString(shooter.getTargetNumber()), 7, 1);
 		
 			// Throttle the OdometryDisplay
 			displayEnd = System.currentTimeMillis();

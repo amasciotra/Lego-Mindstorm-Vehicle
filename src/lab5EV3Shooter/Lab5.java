@@ -33,12 +33,38 @@ public class Lab5 {
 		ShooterDisplay ShooterDisplay = new ShooterDisplay(odometer, shooter);
 		int option = 0;
 
-		do {
+		do{
+			LCD.clear();
+			LCD.drawString("Target 1 '<' ", 0, 1);
+			LCD.drawString("Target 2 '^' ", 0, 2);
+			LCD.drawString("Target 3 '>' ", 0, 3);
+			option = Button.waitForAnyPress();
+			LCD.clear();
+			switch(option) {
+			case Button.ID_LEFT:	
+				shooter.shootLeft();
+				break;
+			case Button.ID_RIGHT:	
+				shooter.shootRight();
+				break;
+			case Button.ID_UP:
+				shooter.shootStraight();
+				break;
+			default:
+				System.out.println("Error - invalid button");			
+				System.exit(-1);
+				break;
+			}
+		} while(Button.waitForAnyPress() != Button.ID_ESCAPE);
+		
+		/*do {
 			//Clear display
 			LCD.clear();
 			
 			//Ask user which part of lab to execute; part 1 or part 2
-			LCD.drawString("Target 1 < | Target 2 ^ | Target 3 >", 0, 4);
+			LCD.drawString("Target 1 '<' ", 0, 1);
+			LCD.drawString("Target 2 '^' ", 0, 2);
+			LCD.drawString("Target 3 '>' ", 0, 3);
 			option = Button.waitForAnyPress();
 		} while (option != Button.ID_LEFT && option != Button.ID_RIGHT && option != Button.ID_UP);		
 		
@@ -54,13 +80,14 @@ public class Lab5 {
 		case Button.ID_UP:										
 			ShooterDisplay.start();	
 			shooter.shootStraight();
+			ShooterDisplay.stop();	
 			break;
 		default:
 			System.out.println("Error - invalid button");			
 			System.exit(-1);
 			break;
 		}
-	while (Button.waitForAnyPress() != Button.ID_ESCAPE);
+	while (Button.waitForAnyPress() != Button.ID_ESCAPE);*/
 	System.exit(0);
 	}
 }
