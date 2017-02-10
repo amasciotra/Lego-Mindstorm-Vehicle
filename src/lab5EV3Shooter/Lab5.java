@@ -57,7 +57,10 @@ public class Lab5 {
 			}
 		} while(Button.waitForAnyPress() != Button.ID_ESCAPE);
 		
-		/*do {
+		/*We could use the following to implement the Shooter Display, but there's a threading issue
+		 * that I don't know how to fix. I think it's fine without the display
+		 * 
+		 * do {
 			//Clear display
 			LCD.clear();
 			

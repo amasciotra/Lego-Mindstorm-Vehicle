@@ -4,7 +4,7 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 /**
  * The Shooter Display class displays relevant information regarding the robot's position provided 
- * by the odometer, as well as the target selected by the user.
+ * by the odometer, as well as the target selected by the user. Currently not in use.
  * 
  * Friday February 10, 2017
  * 12:50pm
