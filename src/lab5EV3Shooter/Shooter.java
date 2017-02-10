@@ -14,7 +14,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class Shooter {
 	//Relevant speeds; note when shooting straight ahead launch speed won't need to be as fast as the "skew speed"
-	public static final int ROTATION_SPEED = 100;
+	public static final int ROTATION_SPEED = 80;
 	public static final int SKEW_SHOOTING_SPEED = 600;
 	public static final int STRAIGHT_SHOOTING_SPEED = 500;
 	public static final int ACCEL = 300;
@@ -115,7 +115,7 @@ public class Shooter {
 	}
 	
 	private void rotate(double theta) {
-		leftMotor.rotate(convertAngle(odometer.getRadius(), odometer.getWidth(), theta), false);
+		leftMotor.rotate(convertAngle(odometer.getRadius(), odometer.getWidth(), theta), true);
 		rightMotor.rotate(-convertAngle(odometer.getRadius(), odometer.getWidth(), theta), false);
 	}
 	
