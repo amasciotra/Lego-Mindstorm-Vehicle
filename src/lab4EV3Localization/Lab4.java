@@ -59,8 +59,8 @@ public class Lab4 {
 		if (option == Button.ID_LEFT) {	
 			LocalizationDisplay.start();	
 			us.doLocalization();
-			Button.waitForAnyPress();
-			lsl.doLocalization();
+			//Button.waitForAnyPress();
+			//lsl.doLocalization();
 			
 		}
 		else if (option == Button.ID_RIGHT){
