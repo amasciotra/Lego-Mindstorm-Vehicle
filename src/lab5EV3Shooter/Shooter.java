@@ -15,8 +15,8 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 public class Shooter {
 	//Relevant speeds; note when shooting straight ahead launch speed won't need to be as fast as the "skew speed"
 	public static final int ROTATION_SPEED = 80;
-	public static final int SKEW_SHOOTING_SPEED = 600;
-	public static final int STRAIGHT_SHOOTING_SPEED = 500;
+	public static final int SKEW_SHOOTING_SPEED = 2500;
+	public static final int STRAIGHT_SHOOTING_SPEED = 2000;
 	public static final int ACCEL = 300;
 	//Angle the robot is facing (off of 90 degree) when aiming at left or right target
 	public static final int TARGET_ANGLE = 20;
@@ -87,7 +87,7 @@ public class Shooter {
 		//Sets motor speeds and accelerations
 		leftMotor.setSpeed(ROTATION_SPEED); 
 		rightMotor.setSpeed(ROTATION_SPEED);
-		shooterMotor.setSpeed(SKEW_SHOOTING_SPEED);
+		shooterMotor.setSpeed(STRAIGHT_SHOOTING_SPEED);
 		rightMotor.setAcceleration(ACCEL);
 		//Check if robot is already directed to target
 		if (90 - BUFFER < odometer.getTheta() && 90 + BUFFER > odometer.getTheta()) {
