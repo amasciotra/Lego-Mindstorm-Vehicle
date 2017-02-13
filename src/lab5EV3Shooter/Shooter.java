@@ -17,12 +17,12 @@ public class Shooter {
 	public static final int ROTATION_SPEED = 80;
 	public static final int SKEW_SHOOTING_SPEED = 2500;
 	public static final int STRAIGHT_SHOOTING_SPEED = 2000;
-	public static final int ACCEL = 300;
+	public static final int ACCEL = 2000;
 	//Angle the robot is facing (off of 90 degree) when aiming at left or right target
 	public static final int TARGET_ANGLE = 20;
 	public static final int BUFFER = 5;
 	//Angle shooting arm rotates through to shoot
-	public static final int SHOOTING_ANGLE = 180;
+	public static final int SHOOTING_ANGLE = -120;
 	public static int targetNumber;
 	
 	private Odometer odometer;
@@ -42,7 +42,7 @@ public class Shooter {
 		leftMotor.setSpeed(ROTATION_SPEED); 
 		rightMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.setSpeed(SKEW_SHOOTING_SPEED);
-		rightMotor.setAcceleration(ACCEL);
+		shooterMotor.setAcceleration(ACCEL);
 		//Check if robot is already directed to target
 		if (odometer.getTheta() > 90 + BUFFER) {
 			//Already facing target
@@ -54,7 +54,9 @@ public class Shooter {
 		}
 		//Now shoot
 		shooterMotor.rotate(SHOOTING_ANGLE, false);
+		shooterMotor.stop();
 		//Return to resting position
+		shooterMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.rotate(-SHOOTING_ANGLE, false);
 		stopMotors();
 	}
@@ -65,7 +67,7 @@ public class Shooter {
 		leftMotor.setSpeed(ROTATION_SPEED); 
 		rightMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.setSpeed(SKEW_SHOOTING_SPEED);
-		rightMotor.setAcceleration(ACCEL);
+		shooterMotor.setAcceleration(ACCEL);
 		//Check if robot is already directed to target
 		if (odometer.getTheta() < 90 - BUFFER) {
 			//Already facing target
@@ -88,7 +90,7 @@ public class Shooter {
 		leftMotor.setSpeed(ROTATION_SPEED); 
 		rightMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.setSpeed(STRAIGHT_SHOOTING_SPEED);
-		rightMotor.setAcceleration(ACCEL);
+		//shooterMotor.setAcceleration(ACCEL);
 		//Check if robot is already directed to target
 		if (90 - BUFFER < odometer.getTheta() && 90 + BUFFER > odometer.getTheta()) {
 			//Already facing target
@@ -100,7 +102,9 @@ public class Shooter {
 		}
 		//Now shoot
 		shooterMotor.rotate(SHOOTING_ANGLE, false);
+		
 		//Return to resting position
+		shooterMotor.setSpeed(ROTATION_SPEED);//try this tomorrow
 		shooterMotor.rotate(-SHOOTING_ANGLE, false);
 		stopMotors();
 	}
