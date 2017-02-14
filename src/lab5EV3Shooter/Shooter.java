@@ -3,10 +3,10 @@ package lab5EV3Shooter;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 /**
- * Shooter class uses the US sensor to turn robot to selected target. Then shoots projectile at the target.
+ * Shooter class uses the US sensor to turn robot to selected target. Then shoots a ball at the target.
  * 
- * Friday February 10, 2017
- * 12:41pm
+ * Tuesday February 14, 2017
+ * 9:45am
  * 
  * @author thomaschristinck
  * @author alexmasciotra
@@ -18,9 +18,9 @@ public class Shooter {
 	public static final int SLOWDOWN_SPEED = 500;
 	public static final int SKEW_SHOOTING_SPEED = 2000;
 	public static final int STRAIGHT_SHOOTING_SPEED = 1500;
-	public static final int ACCEL = 900;
+	public static final int ACCEL = 800;
 	//Angle the robot is facing (off of 90 degree) when aiming at left or right target
-	public static final int TARGET_ANGLE = 20;
+	public static final int TARGET_ANGLE = 15;
 	public static final int BUFFER = 5;
 	//Angle shooting arm rotates through to shoot
 	public static final int SHOOTING_ANGLE = -95;
@@ -56,6 +56,7 @@ public class Shooter {
 		//Now shoot
 		shooterMotor.rotate(SHOOTING_ANGLE, false);
 		//Return to resting position
+		shooterMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.rotate(-SHOOTING_ANGLE, false);
 		stopMotors();
 	}
@@ -79,6 +80,7 @@ public class Shooter {
 		//Now shoot
 		shooterMotor.rotate(SHOOTING_ANGLE, false);
 		//Return to resting position
+		shooterMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.rotate(-SHOOTING_ANGLE, false);
 		stopMotors();
 	}
@@ -102,10 +104,8 @@ public class Shooter {
 		//Now shoot
 		shooterMotor.rotate(SHOOTING_ANGLE, false);
 		//Return to resting position
-		shooterMotor.setSpeed(SLOWDOWN_SPEED);
-		shooterMotor.rotate(SHOOTING_ANGLE, false);
-		shooterMotor.setSpeed(ROTATION_SPEED);//try this tomorrow
-		shooterMotor.rotate(-2 * SHOOTING_ANGLE, false);
+		shooterMotor.setSpeed(ROTATION_SPEED);
+		shooterMotor.rotate(-SHOOTING_ANGLE, false);
 		stopMotors();
 	}
 	
