@@ -18,9 +18,10 @@ public class Shooter {
 	public static final int SLOWDOWN_SPEED = 500;
 	public static final int SKEW_SHOOTING_SPEED = 2000;
 	public static final int STRAIGHT_SHOOTING_SPEED = 1500;
-	public static final int ACCEL = 800;
+	public static final int STRAIGHT_ACCEL = 800;
+	public static final int SKEW_ACCEL = 900;
 	//Angle the robot is facing (off of 90 degree) when aiming at left or right target
-	public static final int TARGET_ANGLE = 15;
+	public static final int TARGET_ANGLE = 18;
 	public static final int BUFFER = 5;
 	//Angle shooting arm rotates through to shoot
 	public static final int SHOOTING_ANGLE = -95;
@@ -43,7 +44,7 @@ public class Shooter {
 		leftMotor.setSpeed(ROTATION_SPEED); 
 		rightMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.setSpeed(SKEW_SHOOTING_SPEED);
-		shooterMotor.setAcceleration(ACCEL);
+		shooterMotor.setAcceleration(SKEW_ACCEL);
 		//Check if robot is already directed to target
 		if (odometer.getTheta() > 90 + BUFFER) {
 			//Already facing target
@@ -67,7 +68,7 @@ public class Shooter {
 		leftMotor.setSpeed(ROTATION_SPEED); 
 		rightMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.setSpeed(SKEW_SHOOTING_SPEED);
-		shooterMotor.setAcceleration(ACCEL);
+		shooterMotor.setAcceleration(SKEW_ACCEL);
 		//Check if robot is already directed to target
 		if (odometer.getTheta() < 90 - BUFFER) {
 			//Already facing target
@@ -91,7 +92,7 @@ public class Shooter {
 		leftMotor.setSpeed(ROTATION_SPEED); 
 		rightMotor.setSpeed(ROTATION_SPEED);
 		shooterMotor.setSpeed(STRAIGHT_SHOOTING_SPEED);
-		shooterMotor.setAcceleration(ACCEL);
+		shooterMotor.setAcceleration(STRAIGHT_ACCEL);
 		//Check if robot is already directed to target
 		if (90 - BUFFER < odometer.getTheta() && 90 + BUFFER > odometer.getTheta()) {
 			//Already facing target
