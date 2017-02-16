@@ -16,12 +16,12 @@ public class Shooter {
 	//Relevant speeds; note when shooting straight ahead launch speed won't need to be as fast as the "skew speed"
 	public static final int ROTATION_SPEED = 80;
 	public static final int SLOWDOWN_SPEED = 500;
-	public static final int SKEW_SHOOTING_SPEED = 1700;
+	public static final int SKEW_SHOOTING_SPEED = 2000;
 	public static final int STRAIGHT_SHOOTING_SPEED = 1500;
 	public static final int STRAIGHT_ACCEL = 800;
-	public static final int SKEW_ACCEL = 850;
+	public static final int SKEW_ACCEL = 900;
 	//Angle the robot is facing (off of 90 degree) when aiming at left or right target
-	public static final int TARGET_ANGLE = 20;
+	public static final int TARGET_ANGLE = 18;
 	public static final int BUFFER = 5;
 	//Angle shooting arm rotates through to shoot
 	public static final int SHOOTING_ANGLE = -95;
