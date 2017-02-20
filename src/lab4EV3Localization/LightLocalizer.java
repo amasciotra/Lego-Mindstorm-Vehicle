@@ -6,7 +6,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
-
+//Ready for Open Source
 /**
  * Light Localizer class uses the light sensor to localize the robot, assuming the robot starts in the lower left quadrant
  * (i.e. in the correct location after running USLocalizer). After localization, the robot should travel to (0, 0, 0).

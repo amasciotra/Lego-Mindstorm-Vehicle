@@ -6,7 +6,7 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.lcd.*;
-
+//Ready for Open Source
 /**
  * Main class for lab 4, handles user-initiated events  assuming the robot starts in the lower left quadrant
  * After localization, the robot should be at (0, 0) facing 0 degrees

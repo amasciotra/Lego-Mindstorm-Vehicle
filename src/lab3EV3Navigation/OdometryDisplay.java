@@ -5,7 +5,7 @@
 package lab3EV3Navigation;
 
 import lejos.hardware.lcd.TextLCD;
-
+//Ready for Open Source
 public class OdometryDisplay extends Thread {
 	private static final long DISPLAY_PERIOD = 250;
 	private Odometer odometer;

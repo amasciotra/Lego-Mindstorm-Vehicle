@@ -2,7 +2,7 @@ package lab4EV3Localization;
 
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
-
+//Ready for Open Source
 /**
  * The US Localization Display class displays relevant information regarding the robot's position provided 
  * by the odometer.

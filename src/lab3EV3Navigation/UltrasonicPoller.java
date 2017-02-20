@@ -1,7 +1,7 @@
 package lab3EV3Navigation;
 
 import lejos.robotics.SampleProvider;
-
+//Ready for Open Source
 ///
 //Control of the wall follower is applied periodically by the 
 //UltrasonicPoller thread.  The while loop at the bottom executes

@@ -1,7 +1,9 @@
 package lab1EV3WallFollower;
 import lab3EV3Navigation.UltrasonicController;
+
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+//Ready for Open Source
 public class PController implements UltrasonicController {
 	
 	private final int bandCenter, bandwidth;

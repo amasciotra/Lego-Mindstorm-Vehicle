@@ -2,11 +2,13 @@ package lab1EV3WallFollower;
 
 import lejos.hardware.sensor.*;
 
+
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.Button;
+//Ready for Open Source
 
 //Tuesday 1pm
 // Lab 1:  EV3 Wall Following robot

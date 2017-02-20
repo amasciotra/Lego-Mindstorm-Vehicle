@@ -1,7 +1,7 @@
 package lab5EV3Shooter;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-
+//Ready for Open Source
 /**
  * Shooter class uses the US sensor to turn robot to selected target. Then shoots a ball at the target.
  * 

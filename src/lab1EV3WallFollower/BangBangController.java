@@ -1,7 +1,7 @@
 package lab1EV3WallFollower;
 import lab3EV3Navigation.UltrasonicController;
 import lejos.hardware.motor.*;
-//Testing
+
 
 public class BangBangController implements UltrasonicController{
 	private final int bandCenter, bandwidth;

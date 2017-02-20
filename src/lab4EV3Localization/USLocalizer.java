@@ -2,7 +2,7 @@ package lab4EV3Localization;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
-
+//Ready for Open Source
 /**
  * US Localizer class uses the US sensor to turn robot in the theta = 0 direction, assuming the robot starts in the lower left quadrant
  * After localization, the robot should be facing 0 degrees

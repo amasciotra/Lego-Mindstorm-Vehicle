@@ -9,7 +9,7 @@ package lab3EV3Navigation;
 
 
 import lejos.hardware.motor.*;
-
+//Ready for Open Source
 public class Odometer extends Thread {
 	// Robot position (given by x, y and theta, from xy-axis)
 	private double x, y, theta;

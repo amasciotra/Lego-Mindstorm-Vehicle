@@ -8,7 +8,7 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
-
+//Ready for Open Source
 
 public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;

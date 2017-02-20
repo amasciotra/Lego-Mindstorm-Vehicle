@@ -4,7 +4,7 @@ import lejos.hardware.*;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.lcd.*;
-
+//Ready for Open Source
 /**
  * Main class for lab 5, handles user-initiated events, switches between methods in Shooter class.
  * 

@@ -12,7 +12,7 @@ package lab4EV3Localization;
  * Movement control class (turnTo, travelTo, flt, localize)
  */
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-
+//Ready for Open Source
 public class Navigation {
 	final static int FAST = 100, SLOW = 80, ACCELERATION = 4000;
 	final static double DEG_ERR = 1.0, CM_ERR = 1.0;

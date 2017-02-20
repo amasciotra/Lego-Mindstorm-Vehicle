@@ -1,7 +1,7 @@
 package lab3EV3Navigation;
 
 import lejos.hardware.motor.*;
-
+//Ready for Open Source
 /**
  * Bangbang controller from Lab 1; used to navigate around the obstacle.
  * 

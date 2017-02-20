@@ -1,7 +1,9 @@
 package lab5EV3Shooter;
 
 import lejos.hardware.ev3.LocalEV3;
+
 import lejos.hardware.lcd.TextLCD;
+//Ready for Open Source
 /**
  * The Shooter Display class displays relevant information regarding the robot's position provided 
  * by the odometer, as well as the target selected by the user. Currently not in use.

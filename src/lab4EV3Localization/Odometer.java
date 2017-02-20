@@ -31,7 +31,7 @@ package lab4EV3Localization;
 import lejos.utility.Timer;
 import lejos.utility.TimerListener;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-
+//Ready for Open Source
 public class Odometer implements TimerListener {
 
 	private Timer timer;

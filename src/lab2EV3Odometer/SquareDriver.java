@@ -4,7 +4,7 @@
 package lab2EV3Odometer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-
+//Ready for Open Source
 public class SquareDriver {
 	private static final int FORWARD_SPEED = 220;//250
 	private static final int ROTATE_SPEED = 120;//150

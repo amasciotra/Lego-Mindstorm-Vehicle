@@ -4,7 +4,7 @@ import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-
+//Ready for Open Source
 
 /**
  * Navigation class for lab 3. Provides functionality for demos 1 and 2.

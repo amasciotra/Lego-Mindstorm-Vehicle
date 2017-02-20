@@ -16,7 +16,7 @@ import lejos.hardware.lcd.*;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.sensor.*;
 import lejos.robotics.*;
-
+//Ready for Open Source
 public class Lab3 {
 	//Final variables for bang-bang control`
 	private static final int BAND_CENTER = 20;
