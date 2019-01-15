@@ -22,12 +22,13 @@ public class Lab5 {
 	// Ultrasonic sensor port, color sensor ports connected to input S1 and S2
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
-	private static final EV3LargeRegulatedMotor shooterMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));		
+	private static final EV3LargeRegulatedMotor shooterMotorL = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));	
+	private static final EV3LargeRegulatedMotor shooterMotorR = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	
 	public static void main(String[] args) {		
 		//Initialize odometer and shooter
 		Odometer odometer = new Odometer(leftMotor, rightMotor, 30, true);
-		Shooter shooter = new Shooter(shooterMotor, odometer);
+		Shooter shooter = new Shooter(shooterMotorL, shooterMotorR, odometer);
 		
 		//Display
 		int option = 0;
@@ -40,12 +41,12 @@ public class Lab5 {
 			option = Button.waitForAnyPress();
 			LCD.clear();
 			switch(option) {
-			case Button.ID_LEFT:	
+			/*case Button.ID_LEFT:	
 				shooter.shootLeft();
 				break;
 			case Button.ID_RIGHT:	
 				shooter.shootRight();
-				break;
+				break;*/
 			case Button.ID_UP:
 				shooter.shootStraight();
 				break;
